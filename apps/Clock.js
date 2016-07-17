@@ -10,8 +10,7 @@ let Clock = class Clock extends Base {
 
   tick() {
     this.state = {
-      "date": (new Date()).toString(),
-      "test": "abc"
+      "date": (new Date()).toString()
     }
   }
 }

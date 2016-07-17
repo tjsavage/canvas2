@@ -26,7 +26,7 @@ class Base {
   set state(obj) {
     var newState = Object.assign({}, obj);
 
-    newState.lastUpdated = new Date();
+    newState["lastUpdated"] = (new Date()).toString();
     this._stateRef.set(newState);
     this.ping();
   }
@@ -40,9 +40,9 @@ class Base {
     var newLogRef = this._logRef.push();
 
     newLogRef.set({
-      message: str,
-      sent: new Date(),
-      type: type || "info"
+      "message": str,
+      "sent": (new Date()).toString(),
+      "type": type || "info"
     });
   }
 
