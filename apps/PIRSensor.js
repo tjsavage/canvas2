@@ -31,7 +31,7 @@ let PIRSensor = class PIRSensor extends Base {
         value: value
       }
 
-      self.log("Sensor state changed: ", value);
+      self.log("Sensor state changed: " + value);
     });
   }
 }

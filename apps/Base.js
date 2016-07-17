@@ -6,6 +6,8 @@ var os = require('os');
 class Base {
   constructor(config) {
     this._config = config;
+
+    setInterval(this.heartbeat.bind(this), 60000);
   }
 
   connect(firebaseDb) {
@@ -42,12 +44,21 @@ class Base {
   }
 
   /*
-  * Ping the system/ reference to let the database know I'm alive
+  * Ping the system/ reference whenever I sent an update
   */
   ping() {
     this._systemRef.update({
       lastPing: new Date()
     });
+  }
+
+  /*
+  * Heartbeat to let the system know I'm Alive
+  */
+  heartbeat() {
+    this._systemRef.update({
+      lastHeartbeat: new Date()
+    })
   }
 
 }
