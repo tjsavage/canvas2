@@ -1,0 +1,33 @@
+{
+  "name": "canvas2",
+  "version": "0.0.1",
+  "description": "System for using raspberry pi's and other embeddable micro-pc's to manage a house.",
+  "main": "app.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "firebase": "^3.2.0",
+    "net-ping": "^1.2.0",
+    "onoff": "^1.1.1",
+    "ping": "^0.1.10",
+    "yargs": "^4.8.0",
+    "rpi-gpio": "^0.7.0"
+  },
+  "devDependencies": {
+    "mocha": "^2.5.3"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tjsavage/canvas2.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tjsavage/canvas2/issues"
+  },
+  "homepage": "https://github.com/tjsavage/canvas2#readme"
+}
