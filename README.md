@@ -28,6 +28,7 @@ Important files:
 
 `.podrc` - The pod configuration, which should be the same for all devices.
 `pod/` - Contains the repo and app for pod.
+`system-config.json` - The system config that is copied to the device.
 
 ## Apps
 

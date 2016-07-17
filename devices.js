@@ -46,14 +46,14 @@ if (argv.deployAll) {
   }).catch(function(err){console.log(err)})
 }
 */
-/*
-if (argv.deployDevice) {
-  //Deploy pod to one device
-  var deviceKey = argv.deployDevice;
-  var devices = systemConfig.devices;
 
-  var deviceConfig = devices[deviceKey];
-  console.log("Deploying podrc to", deviceKey);
+if (argv.deployConfig) {
+  //Deploys the system-config to a single device.
+  var deviceKey = argv.deployConfig;
+  var devices = systemConfig.devices;
+  var deviceConfig = systemConfig.devices[deviceKey];
+
+  console.log("Deploying system config to", deviceKey);
 
   if (!deviceConfig.homeDir) {
     console.error("No homeDir specified in device config - exiting.");
@@ -68,7 +68,7 @@ if (argv.deployDevice) {
     process.exit(1);
   }
 
-  var devicePromise = deployPodToDevice(deviceConfig);
+  var devicePromise = deploySystemConfigToDevice(systemConfig, deviceConfig);
   devicePromise.then(function() {
     console.log("Finished");
     process.exit(0);
@@ -78,7 +78,7 @@ if (argv.deployDevice) {
   });
 
 }
-*/
+
 if (argv.setupDevice) {
   //Set up a devices from scratch
   var deviceKey = argv.setupDevice;
@@ -151,10 +151,9 @@ function setupDevice(deviceConfig) {
   });
 }
 
-/*
-function deployPodToDevice(deviceConfig) {
+
+function deploySystemConfigToDevice(systemConfig, deviceConfig) {
   var ssh = new node_ssh();
-  var podrc = deviceConfig.podrc;
 
   return new Promise(function(resolve, reject) {
     var client = new Client({
@@ -165,11 +164,11 @@ function deployPodToDevice(deviceConfig) {
     });
 
     client.write({
-      destination: deviceConfig.homeDir + '/.podrc',
-      content: new Buffer(JSON.stringify(podrc, null, 2), 'utf-8')
+      destination: deviceConfig.homeDir + '/system-config.json',
+      content: new Buffer(JSON.stringify(systemConfig, null, 2), 'utf-8')
     }, function(err) {
       if (err) reject(err);
-      console.log("Finished upload podrc");
+      console.log("Finished upload system config");
       process.exit(0);
       resolve();
     });
@@ -187,24 +186,8 @@ function deployPodToDevice(deviceConfig) {
   }, function(err) {
     console.log("Error uploading podrc:", err);
     throw err;
-  }).then(function() {
-    console.log("Wiping old pod files.")
-    return ssh.execCommand('pod stopall && rm -rf ~/pod/* && mkdir ~/pod/apps && mkdir ~/pod/repos', {
-      cwd: deviceConfig.homeDir,
-      stream: 'both'
-    }).then(function(result) {
-      console.log("STDOUT:", result.stdout);
-      console.log("STDERR:", result.stderr);
-      console.log("Successfully wiped old pod.")
-    }, function(err) {
-      console.log("Error wiping old pod:", err);
-      throw err;
-    });
-  }).then(function() {
-    console.log("Setting up new pod repos and apps")
-  })
   }).then(function(){
-    return ssh.execCommand('pod web && pod stopall && pod startall', {
+    return ssh.execCommand('pod web && pod restartall', {
       cwd: deviceConfig.homeDir,
       stream: 'both'
     }).then(function(result) {
@@ -216,4 +199,3 @@ function deployPodToDevice(deviceConfig) {
     })
   });
 }
-*/

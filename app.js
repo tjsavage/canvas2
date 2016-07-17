@@ -3,34 +3,42 @@
 var argv = require('yargs').argv;
 var fs = require('fs');
 var path = require('path');
+var os = require('os');
 
-if (!argv.app) {
-  console.error("No app argument provided. Exiting.");
-  process.exit();
+var systemConfigFile = fs.readFileSync(path.resolve(process.env['HOME'], 'system-config.json'), 'UTF-8');
+
+if (!systemConfigFile) {
+  console.error("No device config found. Make sure to deploy a device config to this device by running: `node devices.js --deployConfig=$HOSTNAME`")
+  process.exit(1);
 }
 
-if (!argv.appId) {
-  console.error("No appId argument provided. Exiting.");
-  process.exit();
+var systemConfig = JSON.parse(systemConfigFile);
+
+var hostname = os.hostname();
+
+var deviceConfig = systemConfig.devices[hostname];
+
+if (!deviceConfig) {
+  console.error("No device config found for hostname:", hostname);
+  process.exit(1);
 }
 
-var App = require('./apps/' + argv.app);
+for (var i = 0; i < apps.length; i++) {
+  var appConfig = apps[i];
+  var finalConfig = constructFinalConfig(systemConfig, appConfig);
 
-var appConfig = constructAppConfig(argv);
+  var App = require('./apps/' + appConfig.app);
+  console.log(finalConfig);
+  var app = new App(finalConfig);
+}
 
-var app = new App(appConfig);
-
-function constructAppConfig(argv) {
+function constructFinalConfig(systemConfig, appConfig) {
   var config = {};
 
-  var systemConfigFilepath = process.env.CANVAS2_SYSTEM_CONFIG || argv.systemConfig || path.resolve(__dirname, 'system-config.json');
-
-  var systemConfig = JSON.parse(fs.readFileSync(systemConfigFilepath, 'UTF-8'));
-
   config['firebase'] = systemConfig.global.firebase;
-  config['appId'] = argv.appId;
-  config['app'] = argv.app;
-  config['argv'] = argv;
+  config['appId'] = appConfig.appId;
+  config['app'] = appConfig.app;
+  config['appConfig'] = appConfig;
 
   return config;
 }
