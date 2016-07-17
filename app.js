@@ -23,7 +23,14 @@ if (!deviceConfig) {
   process.exit(1);
 }
 
-for (var i = 0; i < apps.length; i++) {
+var apps = deviceConfig.apps;
+
+if (!apps || apps.length == 0 ) {
+  console.error("No apps defined in system-config for hostname:", hostname);
+  process.exit(1);
+}
+
+for (var i = 0; i < deviceConfig.apps.length; i++) {
   var appConfig = apps[i];
   var finalConfig = constructFinalConfig(systemConfig, appConfig);
 
