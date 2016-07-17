@@ -28,19 +28,21 @@ let PIRSensor = class PIRSensor extends Base {
       }
 
       self.state = {
-        value: value
+        value: value,
+        timestamp: new Date()
       }
 
       self.log("Sensor state initialized: " + value);
     });
-    
+
     this._sensor.watch(function(err, value) {
       if (err) {
         self.log("Pin read error: " + err, "error");
       }
 
       self.state = {
-        value: value
+        value: value,
+        timestamp: new Date()
       }
 
       self.log("Sensor state changed: " + value);
