@@ -1,0 +1,41 @@
+{
+  "global": {
+    "firebase": {
+      "databaseURL": "https://mydatabase.firebaseio.com",
+      "serviceAccount": {
+        "type": "service_account",
+        "project_id": "canvas2-d648a",
+        "private_key_id": "alskdfjlsdkjfs",
+        "private_key": "-----BEGIN PRIVATE KEY-----\nlaskjflskjdflsf\n-----END PRIVATE KEY-----\n",
+        "client_email": "my-app-device-account@my-app.iam.gserviceaccount.com",
+        "client_id": "asdf",
+        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+        "token_uri": "https://accounts.google.com/o/oauth2/token",
+        "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+        "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/my-app-device-account%my-app-d648a.iam.gserviceaccount.com"
+      }
+    }
+  },
+  "devices": {
+    "deviceHostname1": {
+      "podrc": {
+        "root": "/srv",
+        "node_env": "production",
+        "default_script": "app.js",
+        "min_uptime": 360000,
+        "max_restarts": 10,
+        "web": {
+          "username": "admin",
+          "password": "admin",
+          "port": 19999
+        },
+        "apps": {
+          "appId1": {
+            "args": "['--app=Clock', '--appId=appId1']",
+            "remote": "tjsavage/canvas2"
+          }
+        }
+      }
+    }
+  }
+}
