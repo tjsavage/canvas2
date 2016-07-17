@@ -29,7 +29,7 @@ let PIRSensor = class PIRSensor extends Base {
 
       self.state = {
         value: value,
-        timestamp: new Date()
+        time: new Date()
       }
 
       self.log("Sensor state initialized: " + value);
@@ -42,7 +42,7 @@ let PIRSensor = class PIRSensor extends Base {
 
       self.state = {
         value: value,
-        timestamp: new Date()
+        time: new Date()
       }
 
       self.log("Sensor state changed: " + value);

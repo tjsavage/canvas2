@@ -38,7 +38,7 @@ class Base {
 
     newLogRef.set({
       message: str,
-      timestamp: new Date(),
+      time: new Date(),
       type: type || "info"
     });
   }
