@@ -113,7 +113,91 @@ path: ~/pod
 Edit the ~/.podrc file to get a little more specific:
 
 ```
+{
+    // where pod puts all the stuff
+    "root": "/srv",
 
+    // default env
+    "node_env": "development",
+
+    // this can be overwritten in each app's package.json's "main" field
+    // or in the app's configuration below using the "script" field
+    "default_script": "app.js",
+
+    // minimum uptime to be considered stable,
+    // in milliseconds. If not set, all restarts
+    // are considered unstable.
+    "min_uptime": 3600000,
+
+    // max times of unstable restarts allowed
+    // before the app is auto stopped.
+    "max_restarts": 10
+
+    // config for the web interface
+    "web": {
+        // set these! default is admin/admin
+        "username": "admin",
+        "password": "admin",
+        "port": 19999,
+        // allow jsonp for web interface, defaults to false
+        "jsonp": true
+    },
+
+    "apps": {
+        "example1": {
+
+            // passed to the app as process.env.NODE_ENV
+            // if not set, will inherit from global settings
+            "node_env": "production",
+
+            // passed to the app as process.env.PORT
+            // if not set, pod will try to parse from app's
+            // main file (for displaying only), but not
+            // guarunteed to be correct.
+            "port": 8080,
+
+            // pod will look for this script before checking
+            // in package.json of the app.
+            "script": "dist/server.js",
+
+            // *** any valid pm2 config here gets passed to pm2. ***
+
+            // spin up 2 instances using cluster module
+            "instances": 2,
+
+            // pass in additional command line args to the app
+            "args": "['--toto=heya coco', '-d', '1']",
+
+            // file paths for stdout, stderr logs and pid.
+            // will be in ~/.pm2/ if not specified
+            "error_file": "/absolute/path/to/stderr.log",
+            "out_file": "/absolute/path/to/stdout.log"
+        },
+        "example2": {
+            // you can override global settings
+            "min_uptime": 1000,
+            "max_restarts": 200
+        },
+        "my-remote-app": {
+            "remote": "yyx990803/my-remote-app", // github shorthand
+            "branch": "test" // if not specified, defaults to master
+        }
+    },
+
+    // pass environment variables to all apps
+    "env": {
+        "SERVER_NAME": "Commodore",
+        "CERT_DIR": "/path/to/certs"
+    }
+}
+```
+
+Set up pod to start automatically:
+
+```
+# /etc/init/pod.conf
+start on (local-filesystems and net-device-up IFACE!=lo)
+exec sudo -u <username> /path/to/node /path/to/pod startall
 ```
 
 Install canvas2 as a pod app:
