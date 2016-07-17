@@ -60,6 +60,18 @@ The rough schema for the firebase database will be:
 
 See: http://raspberrypi.stackexchange.com/questions/37920/how-do-i-set-up-networking-wifi-static-ip
 
+Edit `/etc/wpa_supplicant/wpa_supplicant.conf` to the following:
+
+```
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+
+network={
+    ssid="ESSID"
+    psk="Your_wifi_password"
+}
+```
+
 Edit `/etc/dhcpcd.conf` to add the following lines:
 
 ```
@@ -73,12 +85,7 @@ Set up your wifi router to assign this static IP to the device's HW address.
 
 Set up your wifi router to connect an external port to the internal POD web service port on your device: 19999
 
-Set up the devices hostname (very important! Hostname is used as a key in system-config.json to read everything about the device.):
-
-- `sudo vim /etc/hosts` and replace `127.0.1.1 raspberrypi` with `127.0.0.1 MYHOSTNAME`
-- `sudo vim /etc/hostname` and replace the contents with MYHOSTNAME
-- run `sudo /etc/init.d/hostname.sh`
-- run `sudo reboot`
+Set up the device's hostname and timezone via: `sudo raspi-config`
 
 Reboot.
 
@@ -102,6 +109,12 @@ Set up POD for the first time:
 `pod`
 
 path: ~/pod
+
+Edit the ~/.podrc file to get a little more specific:
+
+```
+
+```
 
 Install canvas2 as a pod app:
 
