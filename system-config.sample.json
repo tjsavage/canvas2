@@ -18,6 +18,10 @@
   },
   "devices": {
     "deviceHostname1": {
+      "host": "10.0.1.1",
+      "username": "pi",
+      "password": "raspberry",
+      "homeDir": "/home/pi",
       "podrc": {
         "root": "/srv",
         "node_env": "production",

@@ -46,16 +46,45 @@ The rough schema for the firebase database will be:
 
 ## Setting up the Raspberry Pi
 
-### Installing Node
+0) Set up static IP
+
+See: http://raspberrypi.stackexchange.com/questions/37920/how-do-i-set-up-networking-wifi-static-ip
+
+Edit `/etc/dhcpcd.conf` to add the following lines:
 
 ```
-wget https://nodejs.org/dist/v4.4.7/node-v4.4.7-linux-armv6l.tar.xz
-sudo mv node-v4.4.7-linux-armv6l.tar.gz /opt
-cd /opt
-sudo tar -xzf node-v4.4.7-linux-armv6l.tar.gz
-sudo mv node-v4.4.7-linux-armv6l nodejs
-sudo rm node-v4.4.7-linux-armv6l.tar.gz
-sudo rm /usr/bin/node
-sudo ln -s /opt/nodejs/bin/node /usr/bin/node
-sudo ln -s /opt/nodejs/bin/npm /usr/bin/npm
+interface eth0 #Or wlan0 if wifi
+static ip_address=10.0.1.51/24
+static routers=10.0.1.1
+static domain_name_servers=10.0.1.1
 ```
+
+Set up your wifi router to assign this static IP to the device's HW address.
+
+Set up your wifi router to connect an external port to the internal POD web service port on your device: 19999
+
+Reboot.
+
+1) Set up device
+
+`my-device-name` corresponds to the key in your `system-config.json` file.
+
+```
+node devices.js --setupDevice=my-device-name
+```
+
+2) Deploy pod
+
+```
+node devices.js --deployDevice=my-device-name
+```
+
+3) For the remote apps on the device, set up github webhook.
+
+- Go to https://github.com and your repo
+- Go to Settings > Webhooks & services
+- In "Payload URL" enter `http://MYROUTERIP:MYFORWARDEDPORT/hooks/my-app-name`
+- In Content type enter "application/json"
+- Don't enter a secret
+
+?Deploy?
