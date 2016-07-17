@@ -6,13 +6,10 @@ var os = require('os');
 class Base {
   constructor(config) {
     this._config = config;
-
-    firebase.initializeApp(this._config.firebase);
-    this._connect();
   }
 
-  _connect() {
-    this._db = firebase.database();
+  connect(firebaseDb) {
+    this._db = firebaseDb;
     this._stateRef = this._db.ref('state/' + this._config.appId);
     this._logRef = this._db.ref('log/' + this._config.appId);
     this._systemRef = this._db.ref('system/' + this._config.appId);

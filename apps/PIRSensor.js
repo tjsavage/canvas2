@@ -12,7 +12,7 @@ let PIRSensor = class Clock extends Base {
   }
 
   _setupSensor() {
-    this._gpioPin = this._config.argv.gpioPin;
+    this._gpioPin = this._config.appConfig.gpioPin;
 
     if (!this._gpioPin) {
       this.log("No GPIO pin number provided - exiting", "error");

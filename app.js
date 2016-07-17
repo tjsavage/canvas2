@@ -4,6 +4,7 @@ var argv = require('yargs').argv;
 var fs = require('fs');
 var path = require('path');
 var os = require('os');
+var firebase = require('firebase');
 
 var systemConfigFile = fs.readFileSync(path.resolve(process.env['HOME'], 'system-config.json'), 'UTF-8');
 
@@ -30,13 +31,16 @@ if (!apps || apps.length == 0 ) {
   process.exit(1);
 }
 
+firebase.initializeApp(this.systemConfig.global.firebase);
+var firebaseDatabase = firebase.database();
+
 for (var i = 0; i < deviceConfig.apps.length; i++) {
   var appConfig = apps[i];
   var finalConfig = constructFinalConfig(systemConfig, appConfig);
 
   var App = require('./apps/' + appConfig.app);
-  console.log(finalConfig);
   var app = new App(finalConfig);
+  app.connect(firebaseDatabase);
 }
 
 function constructFinalConfig(systemConfig, appConfig) {

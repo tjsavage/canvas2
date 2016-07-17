@@ -168,8 +168,7 @@ function deploySystemConfigToDevice(systemConfig, deviceConfig) {
       content: new Buffer(JSON.stringify(systemConfig, null, 2), 'utf-8')
     }, function(err) {
       if (err) reject(err);
-      console.log("Finished upload system config");
-      process.exit(0);
+      console.log("Finished uploading system config");
       resolve();
     });
   }).then(function() {
@@ -187,7 +186,7 @@ function deploySystemConfigToDevice(systemConfig, deviceConfig) {
     console.log("Error uploading podrc:", err);
     throw err;
   }).then(function(){
-    return ssh.execCommand('pod web && pod restartall', {
+    return ssh.execCommand('source ~/.bashrc && cat ~/.bashrc && pod web && pod restartall', {
       cwd: deviceConfig.homeDir,
       stream: 'both'
     }).then(function(result) {
