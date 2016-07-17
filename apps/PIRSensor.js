@@ -34,3 +34,5 @@ let PIRSensor = class Clock extends Base {
     });
   }
 }
+
+module.exports = PIRSensor
