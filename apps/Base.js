@@ -24,8 +24,10 @@ class Base {
   }
 
   set state(obj) {
-    obj.lastUpdated = new Date();
-    this._stateRef.set(obj);
+    var newState = Object.assign({}, obj);
+
+    newState.lastUpdated = new Date();
+    this._stateRef.set(newState);
     this.ping();
   }
 
