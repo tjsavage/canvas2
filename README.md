@@ -110,11 +110,15 @@ Start pod web service:
 
 `pod web`
 
+Start pod app:
+
+`pod start canvas2`
+
 3) For the remote apps on the device, set up github webhook.
 
 - Go to https://github.com and your repo
 - Go to Settings > Webhooks & services
-- In "Payload URL" enter `http://MYROUTERIP:MYFORWARDEDPORT/hooks/my-app-name`
+- In "Payload URL" enter `http://MYROUTERIP:MYFORWARDEDPORT/hooks/canvas2`
 - In Content type enter "application/json"
 - Don't enter a secret
 
