@@ -31,7 +31,7 @@ if (!apps || apps.length == 0 ) {
   process.exit(1);
 }
 
-firebase.initializeApp(this.systemConfig.global.firebase);
+firebase.initializeApp(systemConfig.global.firebase);
 var firebaseDatabase = firebase.database();
 
 for (var i = 0; i < deviceConfig.apps.length; i++) {
