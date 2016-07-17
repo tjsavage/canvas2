@@ -15,7 +15,7 @@ if (!systemConfigFile) {
 
 var systemConfig = JSON.parse(systemConfigFile);
 
-var hostname = os.hostname();
+var hostname = argv.device || os.hostname();
 
 var deviceConfig = systemConfig.devices[hostname];
 

@@ -4,7 +4,7 @@ var Gpio = require('onoff').Gpio;
 
 const Base = require('./Base.js');
 
-let PIRSensor = class Clock extends Base {
+let PIRSensor = class PIRSensor extends Base {
   constructor(config) {
     super(config);
 
@@ -21,7 +21,7 @@ let PIRSensor = class Clock extends Base {
 
     this._sensor = new Gpio(this._gpioPin, 'in', 'both');
 
-    this.sensor.watch(function(err, value) {
+    this._sensor.watch(function(err, value) {
       if (err) {
         this.log("Pin read error: " + err, "error");
       }
