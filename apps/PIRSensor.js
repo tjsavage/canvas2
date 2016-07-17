@@ -21,16 +21,17 @@ let PIRSensor = class PIRSensor extends Base {
 
     this._sensor = new Gpio(this._gpioPin, 'in', 'both');
 
+    var self = this;
     this._sensor.watch(function(err, value) {
       if (err) {
-        this.log("Pin read error: " + err, "error");
+        self.log("Pin read error: " + err, "error");
       }
 
-      this.state = {
+      self.state = {
         value: value
       }
 
-      this.log("Sensor state changed: ", value);
+      self.log("Sensor state changed: ", value);
     });
   }
 }
