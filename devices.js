@@ -25,6 +25,7 @@ if (argv.devices) {
   }
 }
 
+/*
 if (argv.deployAll) {
   //Deploy to all devices
   var devices = systemConfig.devices;
@@ -44,7 +45,8 @@ if (argv.deployAll) {
     process.exit(0);
   }).catch(function(err){console.log(err)})
 }
-
+*/
+/*
 if (argv.deployDevice) {
   //Deploy pod to one device
   var deviceKey = argv.deployDevice;
@@ -76,7 +78,7 @@ if (argv.deployDevice) {
   });
 
 }
-
+*/
 if (argv.setupDevice) {
   //Set up a devices from scratch
   var deviceKey = argv.setupDevice;
@@ -149,6 +151,7 @@ function setupDevice(deviceConfig) {
   });
 }
 
+/*
 function deployPodToDevice(deviceConfig) {
   var ssh = new node_ssh();
   var podrc = deviceConfig.podrc;
@@ -185,7 +188,22 @@ function deployPodToDevice(deviceConfig) {
     console.log("Error uploading podrc:", err);
     throw err;
   }).then(function() {
-    console.log("Executing pod.")
+    console.log("Wiping old pod files.")
+    return ssh.execCommand('pod stopall && rm -rf ~/pod/* && mkdir ~/pod/apps && mkdir ~/pod/repos', {
+      cwd: deviceConfig.homeDir,
+      stream: 'both'
+    }).then(function(result) {
+      console.log("STDOUT:", result.stdout);
+      console.log("STDERR:", result.stderr);
+      console.log("Successfully wiped old pod.")
+    }, function(err) {
+      console.log("Error wiping old pod:", err);
+      throw err;
+    });
+  }).then(function() {
+    console.log("Setting up new pod repos and apps")
+  })
+  }).then(function(){
     return ssh.execCommand('pod web && pod stopall && pod startall', {
       cwd: deviceConfig.homeDir,
       stream: 'both'
@@ -197,5 +215,5 @@ function deployPodToDevice(deviceConfig) {
       console.log("Error executing pod:", err);
     })
   });
-
 }
+*/

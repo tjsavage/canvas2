@@ -5,7 +5,7 @@ set -e
 touch ~/.bashrc
 source ~/.bashrc
 cd ~
-if [ ! -d ~/.nodejs ]
+if [ ! -d ~/.node-install ]
   then
     echo "Downloading and installing Node"
     wget https://nodejs.org/dist/v4.4.7/node-v4.4.7-linux-armv6l.tar.gz
@@ -33,5 +33,16 @@ if ! type "npm" > /dev/null;
     PATH="$NODEJS_PATH/bin:$PATH"
 fi
 
-echo $PATH
-npm install -g pod
+if ! type "pod" > /dev/null;
+  then
+    echo "Installing pod"
+    npm install -g pod
+fi
+
+if [ ! -d ~/pod ]
+  then
+    echo "Creating pod directory"
+    mkdir ~/pod
+fi
+
+echo "COMPLETE. Now SSH into the device and set up Pod."
