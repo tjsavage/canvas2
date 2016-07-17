@@ -40,3 +40,22 @@ The rough schema for the firebase database will be:
 
   }
 }
+
+
+# Getting Started
+
+## Setting up the Raspberry Pi
+
+### Installing Node
+
+```
+wget https://nodejs.org/dist/v4.4.7/node-v4.4.7-linux-armv6l.tar.xz
+sudo mv node-v4.4.7-linux-armv6l.tar.gz /opt
+cd /opt
+sudo tar -xzf node-v4.4.7-linux-armv6l.tar.gz
+sudo mv node-v4.4.7-linux-armv6l nodejs
+sudo rm node-v4.4.7-linux-armv6l.tar.gz
+sudo rm /usr/bin/node
+sudo ln -s /opt/nodejs/bin/node /usr/bin/node
+sudo ln -s /opt/nodejs/bin/npm /usr/bin/npm
+```

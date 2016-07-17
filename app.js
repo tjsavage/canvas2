@@ -16,11 +16,11 @@ if (!argv.appId) {
 
 var App = require('./apps/' + argv.app);
 
-var appConfig = constructAppConfig(argv.app, argv.appId);
+var appConfig = constructAppConfig(argv);
 
 var app = new App(appConfig);
 
-function constructAppConfig(app, appId) {
+function constructAppConfig(argv) {
   var config = {};
 
   var systemConfigFilepath = process.env.CANVAS2_SYSTEM_CONFIG || argv.systemConfig || path.resolve(__dirname, 'system-config.json');
@@ -28,8 +28,9 @@ function constructAppConfig(app, appId) {
   var systemConfig = JSON.parse(fs.readFileSync(systemConfigFilepath, 'UTF-8'));
 
   config['firebase'] = systemConfig.global.firebase;
-  config['appId'] = appId;
-  config['app'] = app;
+  config['appId'] = argv.appId;
+  config['app'] = argv.app;
+  config['argv'] = argv;
 
   return config;
 }
