@@ -24,6 +24,10 @@ class Base {
   }
 
   connect(firebaseDb) {
+    if (!firebaseDb.ref) {
+      throw new Error("Invalid firebase databased passed into #connect");
+    };
+
     this._firebaseEnabled = true;
 
     this._db = firebaseDb;

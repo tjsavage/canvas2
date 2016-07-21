@@ -1,5 +1,6 @@
 'use strict'
 
+/*
 var TEST_FIREBASE_CONFIG = {
   apiKey: "AIzaSyDPGwxkb135cJuBbncCv21t2jofkIn4mH8",
   authDomain: "canvas2-test.firebaseapp.com",
@@ -7,6 +8,11 @@ var TEST_FIREBASE_CONFIG = {
   storageBucket: ""
 };
 
+var firebase = require('firebase');
+
+
+firebase.initializeApp(TEST_FIREBASE_CONFIG);
+*/
 class FirebaseTestHelper {
   /**
   * A test helper to use in testing things that use firebase.
@@ -22,12 +28,26 @@ class FirebaseTestHelper {
   */
   destroy() {
     if (this._firebase) {
-      return this._app.delete().then(function() {
-        return new Promise(function(resolve, reject) {
-          this._server.close(resolve);
-        })
-      });
+      //return this.wipe();
     }
+  }
+
+  wipe() {
+    this._database.ref('/').set(null);
+  }
+
+  /**
+  * Returns a promise for the data at ref in the firebase database
+  */
+  get(ref) {
+    var self = this;
+    return new Promise(function(resolve, reject) {
+      self._database.ref('system').on("value", function(data) {
+        console.log(data.val());
+        resolve(data.val());
+      })
+    });
+
   }
 
   /**
@@ -35,17 +55,8 @@ class FirebaseTestHelper {
   * @returns the instance of the Firebase app.
   */
   initializeApp() {
-    if (this._firebase || this._app) {
-      throw new Error("FirebaseTestHelper app already initialized");
-    }
-
-    this._firebase = require('firebase');
-    console.log(this.url);
-    this._app = this._firebase.initializeApp({
-      databaseUrl: this.url
-    });
-    console.log(this._firebase.databaseUrl);
-    console.log(this._app);
+    this._database = firebase.database();
+    //this._database.goOffline();
 
     return this._app;
   }
@@ -71,6 +82,10 @@ class FirebaseTestHelper {
 
   get app() {
     return this._app;
+  }
+
+  get database() {
+    return this._database;
   }
 
 

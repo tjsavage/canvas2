@@ -1,5 +1,16 @@
 var expect = require('expect.js');
-var FirebaseTestHelper = require('./FirebaseTestHelper');
+var os = require('os');
+
+var TEST_FIREBASE_CONFIG = {
+  apiKey: "AIzaSyDPGwxkb135cJuBbncCv21t2jofkIn4mH8",
+  authDomain: "canvas2-test.firebaseapp.com",
+  databaseURL: "https://canvas2-test.firebaseio.com",
+  storageBucket: ""
+};
+
+var firebase = require('firebase');
+
+
 
 describe('Base', function() {
   var Base;
@@ -22,29 +33,54 @@ describe('Base', function() {
     })
   });
 
-  describe('#connect', function() {
+  describe('instance', function() {
     var instance;
-    var fbTestHelper;
     var client;
+    var app;
+    var database;
+    var rootRef;
+    var testCallback;
 
     beforeEach(function() {
       instance = new Base({foo: "bar", appId: "appId"})
-      fbTestHelper = new FirebaseTestHelper();
+      firebase.initializeApp(TEST_FIREBASE_CONFIG);
+      database = app.database();
+      rootRef = database.ref('/');
     });
 
     afterEach(function() {
-      fbTestHelper.destroy();
+      database.ref("/").set({});
+      rootRef.off('value', testCallback);
     })
-    /*
-    it('should throw if not passed a valid firebase database', function() {
-      expect(function() {
-        instance.connect({});
-      }).to.throwException(/firebase/);
-    });
-    */
-    it('should successfully connect to a valid firebase database', function() {
-      expect(instance.connect(fbTestHelper.app.database())).to.be.true;
-    });
-  })
 
+    describe('#connect', function() {
+      it('should throw if not passed a valid firebase database', function() {
+        expect(function() {
+          instance.connect({});
+        }).to.throwException(/firebase/);
+      });
+
+      it('should successfully connect to a valid firebase database', function() {
+        expect(instance.connect(database)).to.be.true;
+      });
+
+      it('should successfully update the system data in the database upon connecting', function(done) {
+        rootRef.on('value', function(snapshot){
+          console.log(snapshot.val());
+          expect(snapshot.val().system.appId.hostname).to.equal(os.hostname());
+          expect(snapshot.val().system.appId.lastConnected).to.not.be.null;
+          done();
+        });
+
+        instance.connect(database);
+      })
+    });
+
+    describe('#log', function() {
+      it('should log a basic message', function(done) {
+        instance.connect(database);
+      })
+    })
+
+  })
 })
