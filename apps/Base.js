@@ -4,13 +4,28 @@ var firebase = require('firebase');
 var os = require('os');
 
 class Base {
+  /**
+  * @constructor
+  * @param {object} config - A configuration object. Should at least have a property
+  *   for `appId`, which is the unique identifier for the instance and all of its
+  *   reporting.
+  */
   constructor(config) {
+    if (!config) {
+      throw new Error("Missing a configuration object in constructor.");
+    }
+    if (!config.appId) {
+      throw new Error("No appId set in the configuration.");
+    }
+
     this._config = config;
 
     setInterval(this.heartbeat.bind(this), 60000);
   }
 
   connect(firebaseDb) {
+    this._firebaseEnabled = true;
+
     this._db = firebaseDb;
     this._stateRef = this._db.ref('state/' + this._config.appId);
     this._logRef = this._db.ref('log/' + this._config.appId);
@@ -21,14 +36,27 @@ class Base {
       hostname: os.hostname(),
       networkInterfaces: os.networkInterfaces()
     });
+
+    return false;
   }
 
-  set state(obj) {
-    var newState = Object.assign({}, obj);
+  _setFirebaseRef(ref, data) {
+    if (this._firebaseEnabled) {
+      ref.set(data);
+    }
+  }
 
-    newState["lastUpdated"] = (new Date()).toString();
-    this._stateRef.set(newState);
-    this.ping();
+  _pushFirebaseRef(ref, data) {
+    if (this._firebaseEnabled) {
+      var pushedRef = ref.push();
+      pushedRef.set(data);
+    }
+  }
+
+  _updateFirebaseRef(ref, data) {
+    if (this._firebaseEnabled) {
+      ref.update(data);
+    }
   }
 
   /*
@@ -37,9 +65,7 @@ class Base {
   * @param {string} type - The type of message 'info', 'error', 'warning'. Defaults to 'info'.
   */
   log(str, type) {
-    var newLogRef = this._logRef.push();
-
-    newLogRef.set({
+    this._pushFirebaseRef(this._logRef, {
       "message": str,
       "sent": (new Date()).toString(),
       "type": type || "info"
@@ -50,7 +76,7 @@ class Base {
   * Ping the system/ reference whenever I sent an update
   */
   ping() {
-    this._systemRef.update({
+    this._updateFirebaseRef(this._systemRef, {
       lastPing: new Date()
     });
   }
@@ -64,6 +90,17 @@ class Base {
     })
   }
 
+  set state(obj) {
+    var newState = Object.assign({}, obj);
+
+    newState["lastUpdated"] = (new Date()).toString();
+    this._setFirebaseRef(this._stateRef, newState);
+    this.ping();
+  }
+
+  get config() {
+    return this._config;
+  }
 }
 
 module.exports = Base;
