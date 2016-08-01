@@ -39,8 +39,15 @@ let PIRSensor = class PIRSensor extends Base {
         self.log("Pin read error: " + err, "error");
       }
 
+      var lastTriggered = self.state['lastTriggered'];
+
+      if ('value' in self.state && self.state.value == 0 && value == 1) {
+        lastTriggered = self.timestamp();
+      }
+
       self.state = {
-        "value": value
+        'value': value,
+        'lastTriggered': lastTriggered;
       }
 
       self.log("Sensor state changed: " + value);

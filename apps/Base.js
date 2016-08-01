@@ -36,7 +36,7 @@ class Base {
     this._systemRef = this._db.ref('system/' + this._config.appId);
 
     this._systemRef.update({
-      lastConnected: new Date(),
+      lastConnected: this.timestamp(),
       hostname: os.hostname(),
       networkInterfaces: os.networkInterfaces()
     });
@@ -81,7 +81,7 @@ class Base {
   */
   ping() {
     this._updateFirebaseRef(this._systemRef, {
-      lastPing: new Date()
+      lastPing: this.timestamp();
     });
   }
 
@@ -90,14 +90,18 @@ class Base {
   */
   heartbeat() {
     this._systemRef.update({
-      lastHeartbeat: new Date()
+      lastHeartbeat: this.timestamp();
     })
+  }
+
+  timestamp() {
+    return (new Date()).toString();
   }
 
   set state(obj) {
     var newState = Object.assign({}, obj);
 
-    newState["lastUpdated"] = (new Date()).toString();
+    newState["lastUpdated"] = this.timestamp();
     this._setFirebaseRef(this._stateRef, newState);
     this.ping();
   }
