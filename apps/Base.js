@@ -81,7 +81,7 @@ class Base {
   */
   ping() {
     this._updateFirebaseRef(this._systemRef, {
-      lastPing: this.timestamp();
+      lastPing: this.timestamp()
     });
   }
 
@@ -90,7 +90,7 @@ class Base {
   */
   heartbeat() {
     this._systemRef.update({
-      lastHeartbeat: this.timestamp();
+      lastHeartbeat: this.timestamp()
     })
   }
 
