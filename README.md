@@ -223,3 +223,11 @@ Start pod app:
 - IMPORTANT: Add the ssh key of the device to Github: https://help.github.com/articles/generating-an-ssh-key/
 
 ?Deploy?
+
+## Troubleshooting
+
+### Webhooks not getting delivered from Github?
+
+Make sure `pod web` service is running.
+
+SSH into the machine and run `pod web`.
