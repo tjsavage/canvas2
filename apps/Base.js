@@ -99,11 +99,16 @@ class Base {
   }
 
   set state(obj) {
+    this._state = obj;
     var newState = Object.assign({}, obj);
 
     newState["lastUpdated"] = this.timestamp();
     this._setFirebaseRef(this._stateRef, newState);
     this.ping();
+  }
+
+  get state() {
+    return this._state;
   }
 
   get config() {
