@@ -1,16 +1,7 @@
-var expect = require('expect.js');
+var expect = require('chai').expect;
 var os = require('os');
 
-var TEST_FIREBASE_CONFIG = {
-  apiKey: "AIzaSyDPGwxkb135cJuBbncCv21t2jofkIn4mH8",
-  authDomain: "canvas2-test.firebaseapp.com",
-  databaseURL: "https://canvas2-test.firebaseio.com",
-  storageBucket: ""
-};
-
-var firebase = require('firebase');
-
-
+var MockHub = require('./MockHub');
 
 describe('Base', function() {
   var Base;
@@ -29,58 +20,111 @@ describe('Base', function() {
     it('should throw an error if appId is not set', function() {
       expect(function() {
         var instance = new Base({foo: "bar"});
-      }).to.throwException(/appId/);
+      }).to.throw(/appId/);
     })
   });
 
-  describe('instance', function() {
+  describe('instance without a hub', function() {
     var instance;
-    var client;
-    var app;
-    var database;
-    var rootRef;
-    var testCallback;
 
     beforeEach(function() {
-      instance = new Base({foo: "bar", appId: "appId"})
-      firebase.initializeApp(TEST_FIREBASE_CONFIG);
-      database = app.database();
-      rootRef = database.ref('/');
+      instance = new Base({appId: "appId"});
     });
 
-    afterEach(function() {
-      database.ref("/").set({});
-      rootRef.off('value', testCallback);
-    })
+    it("should still set a state", function(done) {
+      instance.setState({a: "a"}).then(function() {
+        expect(instance.state).to.deep.equal({a: "a"});
+        done();
+      })
 
-    describe('#connect', function() {
-      it('should throw if not passed a valid firebase database', function() {
-        expect(function() {
-          instance.connect({});
-        }).to.throwException(/firebase/);
+
+    });
+
+    it('should update state when it was not previously set', function(done) {
+      instance.updateState({a: "a"}).then(function() {
+        expect(instance.state).to.deep.equal({a: "a"});
+        done();
       });
+    });
 
-      it('should successfully connect to a valid firebase database', function() {
-        expect(instance.connect(database)).to.be.true;
+    it('should update an existing state value', function(done) {
+      instance.setState({a: "a"}).then(function() {
+        return instance.updateState({a: "b"})
+      }).then(function() {
+        expect(instance.state).to.deep.equal({a: "b"});
+        done();
       });
+    });
 
-      it('should successfully update the system data in the database upon connecting', function(done) {
-        rootRef.on('value', function(snapshot){
-          console.log(snapshot.val());
-          expect(snapshot.val().system.appId.hostname).to.equal(os.hostname());
-          expect(snapshot.val().system.appId.lastConnected).to.not.be.null;
+    it('should update an existing state with a not previously set value', function(done) {
+      instance.setState({a: "a"}).then(function() {
+        return instance.updateState({b: "b"})
+      }).then(function() {
+        expect(instance.state).to.deep.equal({a: "a", b: "b"});
+        done();
+      })
+    });
+
+  });
+
+  describe('instance with a hub', function() {
+    var instance;
+    var hub;
+
+    beforeEach(function(done) {
+      instance = new Base({appId: "appId"});
+      hub = new MockHub();
+      instance.registerHub(hub).then(done);
+    });
+
+    it('should have sent a connection when the hub was registered', function() {
+      expect(hub.connections['appId'].length).to.equal(1);
+      expect(hub.connections['appId'][0]).to.equal('connect');
+    });
+
+    describe('setState', function() {
+      it('should correctly send a state to the hub', function(done) {
+        instance.setState({a: 'a'}).then(function() {
+          expect(hub.state['appId']).to.deep.equal({a: 'a'});
           done();
-        });
+        }).then(null, done);
+      });
 
-        instance.connect(database);
-      })
+      it('should correctly override a state', function(done) {
+        instance.setState({a: 'a'}).then(function() {
+          return instance.setState({b: 'b'});
+        }).then(function(){
+          expect(hub.state['appId']).to.deep.equal({b: 'b'});
+          done();
+        }).then(null, done);
+      });
     });
 
-    describe('#log', function() {
-      it('should log a basic message', function(done) {
-        instance.connect(database);
+    describe('updateState', function() {
+      it('should correctly set state if no previous state', function(done) {
+        instance.updateState({a: 'a'}).then(function() {
+          expect(hub.state['appId']).to.deep.equal({a: 'a'});
+          done()
+        }).then(null, done);
       })
-    })
 
+      it('should correctly override existing state', function(done) {
+        instance.setState({a:'a', b:'b'}).then(function() {
+          return instance.updateState({a:'c'});
+        }).then(function() {
+          expect(hub.state['appId']).to.deep.equal({a:'c', b:'b'});
+          done();
+        }).then(null, done);
+      });
+
+      it('should correctly add to existing state', function(done) {
+        instance.setState({a:'a'}).then(function() {
+          return instance.updateState({b:'b'});
+        }).then(function() {
+          expect(hub.state['appId']).to.deep.equal({a:'a', b:'b'});
+          done();
+        }).then(null, done);
+      });
+    })
   })
 })
