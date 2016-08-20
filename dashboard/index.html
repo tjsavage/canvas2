@@ -3,13 +3,11 @@
   <head>
     <meta charset="utf-8">
     <title>Welcome to Firebase Hosting</title>
-    <style media="screen">
-      body {
-        font-family: Roboto, Arial, sans-serif;
-        background: #ECEFF1;
-        color: rgba(0,0,0,0.87);
-      }
-    </style>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
+    <link href="https://fonts.googleapis.com/css?family=Bungee" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.1.0/milligram.css">
+    <link rel="stylesheet" href="/style.css">
 
     <script src="https://www.gstatic.com/firebasejs/3.2.0/firebase.js"></script>
     <script>
@@ -29,8 +27,27 @@
         document.getElementById('val').textContent = snapshot.val().value;
       });
     </script>
+
+    <link rel="import" href="/bower_components/polymer/polymer.html">
+    <link rel="import" href="/components/muni-block.html">
+    <link rel="import" href="/components/data-connection.html">
   </head>
   <body>
+    <template is="dom-bind">
+      <data-connection data="{{data}}"></data-connection>
+      <div class="row">
+
+        <div class="column"><muni-block data="{{data.muni}}" class="column"></muni-block></div>
+        <div class="column">Thing</div>
+        <div class="column">Thing</div>
+      </div>
+      <div class="row">
+        <div class="column">Thing</div>
+        <div class="column">Thing</div>
+        <div class="column">Thing</div>
+      </div>
+    </template>
+
     <div>Sensor value: <span id="val"></span></div>
   </body>
 </html>

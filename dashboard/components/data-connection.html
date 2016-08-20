@@ -1,0 +1,24 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+<script>
+Polymer({
+  is: 'data-connection',
+  properties: {
+    data: {
+      type: Object,
+      notify: true,
+      value: function() {
+        return {
+          muni: {
+            predictions: [
+              4*60,
+              11*60,
+              18*60
+            ]
+          }
+        }
+      }
+    }
+  }
+})
+</script>

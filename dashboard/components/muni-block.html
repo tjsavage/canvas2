@@ -1,0 +1,120 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+<dom-module id="muni-block">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      .warning {
+        background: #f1c40f;
+      }
+      .good {
+        background: #27ae60;
+      }
+      .wait {
+        background: #8e44ad;
+      }
+
+      .times {
+        text-align: center;
+      }
+
+      #container {
+        width: 100%;
+        height: 100%;
+        padding-left: 1em;
+        text-align: center;
+      }
+
+      h2, h3, h4 {
+        font-family: 'Roboto';
+      }
+    </style>
+
+    <div id="container" class="warning">
+      <h1>Next Muni</h1>
+      <div class="times">
+        <template is="dom-repeat" items="[[missed]]">
+          <h4>[[secondsToTime(item)]]</h4>
+        </template>
+        <h2>[[secondsToTime(closestGood)]]</h2>
+        <template is="dom-repeat" items="[[next]]">
+          <h4>[[secondsToTime(item)]]</h4>
+        </template>
+      </div>
+
+    <div>
+  </template>
+</dom-module>
+
+<script>
+Polymer({
+  is: 'muni-block',
+  THRESHOLDS: {
+    MISSED: 600,
+    WARNING: 720,
+    GOOD: 900
+  },
+  properties: {
+    data: {
+      type: Object,
+      observer: 'dataChanged'
+    },
+    state: {
+      type: String,
+      observer: 'stateChanged'
+    },
+    missed: {
+      type: Array,
+      value: function(){return []}
+    },
+    closestGood: {
+      type: Number
+    },
+    next: {
+      type: Array,
+      value: function(){ return []}
+    }
+  },
+  secondsToTime: function(seconds) {
+    return (seconds / 60) + ":" + ((seconds % 60) < 10 ? '0' + seconds % 60: seconds % 60);
+  },
+  stateChanged: function() {
+    Polymer.dom(this.$.container).className = this.state;
+  },
+  dataChanged: function() {
+    var missed = [];
+    var closestGood = 0;
+    var next = [];
+    var state = "";
+    for(var i = 0; i < this.data.predictions.length; i++) {
+      var prediction = this.data.predictions[i];
+      if (prediction < this.THRESHOLDS.MISSED) {
+        missed.push(prediction);
+      }
+      if (prediction >= this.THRESHOLDS.MISSED) {
+        if (!closestGood) {
+          closestGood = prediction;
+        } else {
+          next.push(prediction);
+        }
+      }
+    }
+
+    if (closestGood < this.THRESHOLDS.WARNING) {
+      state = 'warning'
+    } else if (closestGood < this.THRESHOLDS.GOOD) {
+      state = 'good'
+    } else {
+      state = 'wait'
+    }
+
+    this.missed = missed;
+    this.closestGood = closestGood;
+    this.next = next;
+    this.state = state;
+  }
+});
+</script>
