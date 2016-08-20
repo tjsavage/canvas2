@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Welcome to Firebase Hosting</title>
+    <style media="screen">
+      body {
+        font-family: Roboto, Arial, sans-serif;
+        background: #ECEFF1;
+        color: rgba(0,0,0,0.87);
+      }
+    </style>
+
+    <script src="https://www.gstatic.com/firebasejs/3.2.0/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyDtDVxEYRO-33U7Wl0db_CIbd_7L1yqBC0",
+        authDomain: "canvas2-d648a.firebaseapp.com",
+        databaseURL: "https://canvas2-d648a.firebaseio.com",
+        storageBucket: "canvas2-d648a.appspot.com",
+      };
+      firebase.initializeApp(config);
+
+      var db = firebase.database();
+      var blueMotionSensorRef = db.ref('state/blue-motion-sensor');
+
+      blueMotionSensorRef.on('value', function(snapshot) {
+        document.getElementById('val').textContent = snapshot.val().value;
+      });
+    </script>
+  </head>
+  <body>
+    <div>Sensor value: <span id="val"></span></div>
+  </body>
+</html>
