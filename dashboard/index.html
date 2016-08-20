@@ -19,13 +19,6 @@
         storageBucket: "canvas2-d648a.appspot.com",
       };
       firebase.initializeApp(config);
-
-      var db = firebase.database();
-      var blueMotionSensorRef = db.ref('state/blue-motion-sensor');
-
-      blueMotionSensorRef.on('value', function(snapshot) {
-        document.getElementById('val').textContent = snapshot.val().value;
-      });
     </script>
 
     <link rel="import" href="/bower_components/polymer/polymer.html">

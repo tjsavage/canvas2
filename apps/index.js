@@ -9,13 +9,17 @@ var APP_MODULE_PATHS = {
 }
 
 module.exports = {
-  startApp: function(appName, config) {
+  startApp: function(appConfig) {
+    if (!appConfig.app) {
+      throw new Error("No appName provided in app config");
+    }
+    var appName = appConfig.app;
     if (!(appName in APP_MODULE_PATHS)) {
       throw new Error('App', appName, 'not in app modules');
     }
 
     var App = require(APP_MODULE_PATHS[appName]);
 
-    return new App(config);
+    return new App(appConfig);
   }
 }

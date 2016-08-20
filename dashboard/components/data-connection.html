@@ -19,6 +19,27 @@ Polymer({
         }
       }
     }
+  },
+  ready: function() {
+    var db = firebase.database();
+    var stateRef = db.ref('state');
+
+    stateRef.on('value', function(snapshot) {
+      this.transformStateToData(snapshot.val());
+    }.bind(this));
+  },
+  transformStateToData: function(state) {
+    var data = {};
+    data.muni = {};
+    data.muni.predictions = [];
+
+    var muniPredictions = state['local-munimonitor']['sf-muni']['KT']['5728'];
+
+    for (var i = 0; i < muniPredictions.length; i++) {
+      data.muni.predictions.push(muniPredictions[i]['seconds']);
+    }
+
+    this.data = data;
   }
 })
 </script>

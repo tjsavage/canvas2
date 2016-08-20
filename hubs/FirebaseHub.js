@@ -9,7 +9,8 @@ class FirebaseHub extends AbstractHub {
   constructor(config) {
     super(config);
 
-    var firebaseDb = config.firebaseDb;
+    firebase.initializeApp(config)
+    var firebaseDb = firebase.database();
 
     if (!firebaseDb.ref) {
       throw new Error("Invalid firebase databased passed into FirebaseHub constructor");
@@ -21,12 +22,6 @@ class FirebaseHub extends AbstractHub {
     this._stateRef = this._db.ref('state');
     this._logRef = this._db.ref('log');
     this._systemRef = this._db.ref('system');
-
-    this._systemRef.update({
-      lastConnected: this.timestamp(),
-      hostname: os.hostname(),
-      networkInterfaces: os.networkInterfaces()
-    });
   }
 
   setState(appId, obj) {

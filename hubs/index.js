@@ -33,6 +33,14 @@ class HubFactory {
     return hub;
   }
 
+  getHubInstanceById(hubId) {
+    if (!(hubId in this.hubInstances)) {
+      throw new Error("hubId", hubId, "not found");
+    }
+
+    return this.hubInstances[hubId];
+  }
+
 }
 
 module.exports = {

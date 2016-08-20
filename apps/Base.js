@@ -31,6 +31,7 @@ class Base {
 
   setState(obj) {
     this._state = obj;
+    this.outputIfNeeded(this._config.appId, 'setState:', this._state);
     if (this.hub) {
       return this.hub.setState(this._config.appId, obj);
     }

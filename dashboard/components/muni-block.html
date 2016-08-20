@@ -14,7 +14,7 @@
         background: #27ae60;
       }
       .wait {
-        background: #8e44ad;
+        background: #e74c3c;
       }
 
       .times {
@@ -33,7 +33,7 @@
       }
     </style>
 
-    <div id="container" class="warning">
+    <div id="container" class$="[[state]]">
       <h1>Next Muni</h1>
       <div class="times">
         <template is="dom-repeat" items="[[missed]]">
@@ -53,7 +53,7 @@
 Polymer({
   is: 'muni-block',
   THRESHOLDS: {
-    MISSED: 600,
+    MISSED: 630,
     WARNING: 720,
     GOOD: 900
   },
@@ -63,8 +63,7 @@ Polymer({
       observer: 'dataChanged'
     },
     state: {
-      type: String,
-      observer: 'stateChanged'
+      type: String
     },
     missed: {
       type: Array,
@@ -79,10 +78,7 @@ Polymer({
     }
   },
   secondsToTime: function(seconds) {
-    return (seconds / 60) + ":" + ((seconds % 60) < 10 ? '0' + seconds % 60: seconds % 60);
-  },
-  stateChanged: function() {
-    Polymer.dom(this.$.container).className = this.state;
+    return Math.floor(seconds / 60) + ":" + ((seconds % 60) < 10 ? '0' + seconds % 60: seconds % 60);
   },
   dataChanged: function() {
     var missed = [];
