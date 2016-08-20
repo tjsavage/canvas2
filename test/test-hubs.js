@@ -1,4 +1,7 @@
-var expect = require('chai').expect;
+var chai = require('chai');
+
+var expect = chai.expect;
+
 var os = require('os');
 
 describe('hubs', function() {
@@ -40,6 +43,51 @@ describe('hubs', function() {
       var hubInstance1 = factory.getHubInstance({'hubId': 'a', 'hubClass': 'MemoryHub'});
       var hubInstance2 = factory.getHubInstance({'hubId': 'a', 'hubClass': 'MemoryHub'});
       expect(hubInstance1).to.equal(hubInstance2);
+    })
+  }),
+
+  describe('LocalHub', function() {
+    var HubFactory = require('../hubs').HubFactory;
+    var factory;
+    var hub;
+
+    beforeEach(function() {
+      factory = new HubFactory();
+      hub = factory.getHubInstance({'hubId': 'a', 'hubClass': 'LocalHub'});
+    });
+
+    it('should set the state', function(done) {
+      hub.setState('app1', {test: "1"}).then(function() {
+        return hub.getState('app1').then(function(data) {
+          expect(data).to.deep.equal({test: '1'});
+          done();
+        });
+      }).then(null, done);
+    })
+
+    it('should update state', function(done) {
+      hub.setState('app1', {test1: "1"}).then(function() {
+        return hub.updateState('app1', {test2: "2"});
+      }).then(function() {
+        return hub.getState('app1');
+      }).then(function(data) {
+        expect(data).to.deep.equal({test1: "1", test2: "2"});
+        done();
+      }).then(null, done);
+    });
+
+    it('should correctly write state for multiple apps', function(done) {
+      hub.setState('app1', {test1: "1"}).then(function() {
+        return hub.setState('app2', {test2: "2"})
+      }).then(function() {
+        return hub.getState('app1');
+      }).then(function(app1Data) {
+        expect(app1Data).to.deep.equal({test1: "1"})
+        return hub.getState('app2');
+      }).then(function(app2Data) {
+        expect(app2Data).to.deep.equal({test2: "2"});
+        done();
+      }).then(null, done);
     })
   })
 })

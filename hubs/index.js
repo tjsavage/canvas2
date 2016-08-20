@@ -8,7 +8,8 @@ class HubFactory {
   static get HUB_CLASSES() {
     return {
       'FirebaseHub': require('./FirebaseHub'),
-      'MemoryHub': require('./MemoryHub')
+      'MemoryHub': require('./MemoryHub'),
+      'LocalHub': require('./LocalHub')
     }
   }
 
