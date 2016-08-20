@@ -6,10 +6,10 @@ var os = require('os');
 var AbstractHub = require('./AbstractHub');
 
 class FirebaseHub extends AbstractHub {
-  constructor(options) {
-    super(options);
+  constructor(config) {
+    super(config);
 
-    var firebaseDb = options.firebaseDb;
+    var firebaseDb = config.firebaseDb;
 
     if (!firebaseDb.ref) {
       throw new Error("Invalid firebase databased passed into FirebaseHub constructor");

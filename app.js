@@ -6,7 +6,6 @@ var path = require('path');
 var os = require('os');
 var firebase = require('firebase');
 
-
 var systemConfigFilePath = argv.systemConfigFile || path.resolve(process.env['HOME'], 'system-config.json');
 var systemConfigFile = fs.readFileSync(systemConfigFilePath, 'UTF-8');
 
@@ -43,15 +42,4 @@ for (var i = 0; i < deviceConfig.apps.length; i++) {
   var App = require('./apps/' + appConfig.app);
   var app = new App(finalConfig);
   app.connect(firebaseDatabase);
-}
-
-function constructFinalConfig(systemConfig, appConfig) {
-  var config = {};
-
-  config['firebase'] = systemConfig.global.firebase;
-  config['appId'] = appConfig.appId;
-  config['app'] = appConfig.app;
-  config['appConfig'] = appConfig;
-
-  return config;
 }

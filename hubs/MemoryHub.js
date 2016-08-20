@@ -1,15 +1,15 @@
 'use strict'
 
-var AbstractHub = require('../lib/AbstractHub');
+var AbstractHub = require('./AbstractHub');
 
 /**
 * The MockHub class mocks a hub.
 */
-class MockHub extends AbstractHub {
-  constructor(options) {
-    super(options);
+class MemoryHub extends AbstractHub {
+  constructor(config) {
+    super(config);
 
-    this.options = options;
+    this.config = config;
     this.state = {};
     this.logs = {};
     this.errors = {};
@@ -86,4 +86,4 @@ class MockHub extends AbstractHub {
   }
 }
 
-module.exports = MockHub;
+module.exports = MemoryHub;

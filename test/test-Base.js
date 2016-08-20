@@ -1,7 +1,7 @@
 var expect = require('chai').expect;
 var os = require('os');
 
-var MockHub = require('./MockHub');
+var MockHub = require('../hubs/MemoryHub');
 
 describe('Base', function() {
   var Base;

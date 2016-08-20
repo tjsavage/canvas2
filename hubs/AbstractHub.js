@@ -6,8 +6,8 @@
 * Hub is a singleton - there is only one running per hub type per device.
 */
 class AbstractHub {
-  constructor(options) {
-
+  constructor(config) {
+    this._config = config;
   }
 
   /**
