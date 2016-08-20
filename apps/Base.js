@@ -39,6 +39,7 @@ class Base {
 
   updateState(obj) {
     this._state = Object.assign(this._state, obj);
+    this.outputIfNeeded(this._config.appId, 'updatedState:', this._state);
     if (this.hub) {
       return this.hub.updateState(this._config.appId, obj);
     }
@@ -46,9 +47,7 @@ class Base {
   }
 
   log(str) {
-    if (this._config.verbose || !this.hub) {
-      console.log(this._config.appId, str);
-    }
+    this.outputIfNeeded(this._config.appId, str);
     if (this.hub) {
       return this.hub.log(this._config.appId, str);
     }
@@ -66,9 +65,7 @@ class Base {
   }
 
   heartbeat() {
-    if (this._config.verbose || !this.hub) {
-      console.log(this._config.appId, "heartbeat");
-    }
+    this.outputIfNeeded(this._config.appId, "heartbeat");
     if (this.hub) {
       return this.hub.heartbeat(this._config.appId);
     }
@@ -76,9 +73,7 @@ class Base {
   }
 
   ping() {
-    if (this._config.verbose || !this.hub) {
-      console.log(this._config.appId, "ping")
-    }
+    this.outputIfNeeded(this._config.appId, "ping")
     if (this.hub) {
       return this.hub.ping(this._config.appId);
     }
@@ -86,13 +81,17 @@ class Base {
   }
 
   connect() {
-    if (this._config.verbose || !this.hub) {
-      console.log(this._config.appId, "connect");
-    }
+    this.outputIfNeeded(this._config.appId, "connect");
     if (this.hub) {
       return this.hub.connect(this._config.appId);
     }
     return Promise.resolve();
+  }
+
+  outputIfNeeded() {
+    if (this._config.verbose || !this.hub) {
+      console.log.apply(console, arguments);
+    }
   }
 
   get config() {

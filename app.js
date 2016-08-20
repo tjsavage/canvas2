@@ -1,6 +1,7 @@
 'use strict'
 
 var argv = require('yargs').argv;
+var randomstring = require('randomstring');
 
 var apps = require('./apps');
 
@@ -9,10 +10,11 @@ var config = argv.config;
 
 if (config) {
   config = JSON.parse(config);
-} else {
-  config = {
-    appId: 'defaultApp'
-  }
 }
+
+config = Object.assign({
+  appId: 'defaultApp-' + randomstring.generate(4),
+  verbose: true
+}, config);
 
 apps.startApp(appName, config);

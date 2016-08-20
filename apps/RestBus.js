@@ -6,11 +6,13 @@ const Base = require('./Base.js');
 
 let RestBus = class RestBus extends Base {
   constructor(config) {
+    config = Object.assign({
+      port: 3030,
+    }, config)
+
     super(config);
 
-    this._config = Object.assign({
-      port: 3030,
-    }, this._config)
+
 
     var restbus = require('restbus');
 

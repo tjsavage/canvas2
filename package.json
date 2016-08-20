@@ -13,6 +13,8 @@
     "node-ssh": "^2.0.7",
     "onoff": "^1.1.1",
     "ping": "^0.1.10",
+    "randomstring": "^1.1.5",
+    "request": "^2.74.0",
     "restbus": "^1.1.3",
     "rpi-gpio": "^0.7.0",
     "scp2": "^0.5.0",
