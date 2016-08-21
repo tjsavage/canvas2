@@ -1,4 +1,4 @@
-var argv = require('yargs').argv;
+var program = require('commander');
 var fs = require('fs');
 var path = require('path');
 var client = require('scp2');
@@ -8,22 +8,39 @@ var path = require('path');
 
 var ping = require('ping');
 
-var systemConfigFilepath = process.env.CANVAS2_SYSTEM_CONFIG || argv.systemConfig || path.resolve(__dirname, 'system-config.json');
+program
+  .option('-c, --config <filepath>', 'The file path of the system-system.json')
 
+var systemConfigFilepath = process.env.CANVAS2_SYSTEM_CONFIG || program.config || path.resolve(__dirname, 'system-config.json');
 var systemConfig = JSON.parse(fs.readFileSync(systemConfigFilepath, 'UTF-8'));
 
-if (argv.devices) {
-  //Just try to connect to the devices and report status
-  var devices = systemConfig.devices;
-  for (var key in devices) {
-    var device = devices[key];
-    process.stdout.write(key + "...");
-    ping.sys.probe(devices[key].host, function(isAlive) {
-      process.stdout.write(isAlive ? "Alive" : "Can't reach");
-      process.stdout.write("\n");
-    })
-  }
-}
+program
+  .command('devices')
+  .action(function() {
+    var devices = systemConfig.devices;
+
+    var pingPromises = []
+    var pingedDevices = [];
+
+    for (var key in devices) {
+      var device = devices[key];
+      if (!device.host) {
+        console.log("%s: no host provided", key);
+        continue;
+      }
+
+      var isAlivePromise = pingDevice(device.host);
+
+      pingPromises.push(isAlivePromise);
+      pingedDevices.push(key);
+    }
+
+    Promise.all(pingPromises).then(function(results) {
+      for (var i = 0; i < results.length; i++) {
+        console.log("%s: %s", pingedDevices[i], results[i] ? "connected" : "can't reach");
+      }
+    });
+  });
 
 /*
 if (argv.deployAll) {
@@ -47,67 +64,77 @@ if (argv.deployAll) {
 }
 */
 
-if (argv.deployConfig) {
-  //Deploys the system-config to a single device.
-  var deviceKey = argv.deployConfig;
-  var devices = systemConfig.devices;
-  var deviceConfig = systemConfig.devices[deviceKey];
+program
+  .command('deploy <device>')
+  .action(function(device) {
+    console.log('Deploying system config to %s', device);
 
-  console.log("Deploying system config to", deviceKey);
+    var devices = systemConfig.devices;
+    var deviceConfig = systemConfig.devices[device];
 
-  if (!deviceConfig.homeDir) {
-    console.error("No homeDir specified in device config - exiting.");
-    process.exit(1);
-  }
-  if (!deviceConfig.username) {
-    console.error("No username specified in device config - exiting.");
-    process.exit(1);
-  }
-  if (!deviceConfig.password) {
-    console.error("No password specified in device config - exiting.");
-    process.exit(1);
-  }
+    if (!deviceConfig.homeDir) {
+      console.error("No homeDir specified in device config - exiting.");
+      process.exit(1);
+    }
+    if (!deviceConfig.username) {
+      console.error("No username specified in device config - exiting.");
+      process.exit(1);
+    }
+    if (!deviceConfig.password) {
+      console.error("No password specified in device config - exiting.");
+      process.exit(1);
+    }
 
-  var devicePromise = deploySystemConfigToDevice(systemConfig, deviceConfig);
-  devicePromise.then(function() {
-    console.log("Finished");
-    process.exit(0);
-  }, function(err) {
-    console.log("Exited with error:", err);
-    process.exit(1);
-  });
+    var devicePromise = deploySystemConfigToDevice(systemConfig, deviceConfig);
+    devicePromise.then(function() {
+      console.log("Finished");
+      process.exit(0);
+    }, function(err) {
+      console.log("Exited with error:", err);
+      process.exit(1);
+    });
+  })
 
-}
+program
+  .command('setup <device>')
+  .action(function(device) {
+    var deviceKey = argv.setupDevice;
+    var devices = systemConfig.devices;
 
-if (argv.setupDevice) {
-  //Set up a devices from scratch
-  var deviceKey = argv.setupDevice;
-  var devices = systemConfig.devices;
+    var deviceConfig = devices[deviceKey];
+    console.log("Setting up", deviceKey);
 
-  var deviceConfig = devices[deviceKey];
-  console.log("Setting up", deviceKey);
+    if (!deviceConfig.homeDir) {
+      console.error("No homeDir specified in device config - exiting.");
+      process.exit(1);
+    }
+    if (!deviceConfig.username) {
+      console.error("No username specified in device config - exiting.");
+      process.exit(1);
+    }
+    if (!deviceConfig.password) {
+      console.error("No password specified in device config - exiting.");
+      process.exit(1);
+    }
 
-  if (!deviceConfig.homeDir) {
-    console.error("No homeDir specified in device config - exiting.");
-    process.exit(1);
-  }
-  if (!deviceConfig.username) {
-    console.error("No username specified in device config - exiting.");
-    process.exit(1);
-  }
-  if (!deviceConfig.password) {
-    console.error("No password specified in device config - exiting.");
-    process.exit(1);
-  }
+    var devicePromise = setupDevice(deviceConfig);
+    devicePromise.then(function() {
+      console.log("Finished");
+      process.exit(0);
+    }, function(err) {
+      console.log("Exited with error:", err);
+      process.exit(1);
+    });
+  })
 
-  var devicePromise = setupDevice(deviceConfig);
-  devicePromise.then(function() {
-    console.log("Finished");
-    process.exit(0);
-  }, function(err) {
-    console.log("Exited with error:", err);
-    process.exit(1);
-  });
+program.parse(process.argv);
+
+function pingDevice(host) {
+  return new Promise(function(resolve, reject) {
+    ping.sys.probe(host, function(isAlive) {
+      resolve(isAlive);
+    })
+  })
 }
 
 function setupDevice(deviceConfig) {
