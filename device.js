@@ -1,6 +1,6 @@
 'use strict'
 
-var argv = require('yargs').argv;
+var program = require('commander');
 var fs = require('fs');
 var path = require('path');
 var os = require('os');
@@ -10,31 +10,33 @@ var HubFactory = hubs.HubFactory;
 
 var AppModule = require('./apps');
 
-var systemConfigFilePath = argv.systemConfigFile || path.resolve(process.env['HOME'], 'system-config.json');
+program
+  .option('-c, --config [filepath]', 'Path to the system-config.json file')
+  .option('-d, --device [device]', 'Name of the device to use in the config. Defaults to hostname.')
+  .option('-v, --verbose', 'Set all applications to log verbosely')
+  .parse(process.argv);
+
+
+var systemConfigFilePath = program.config || path.resolve(process.env['HOME'], 'system-config.json');
 var systemConfigFile = fs.readFileSync(systemConfigFilePath, 'UTF-8');
 
 if (!systemConfigFile) {
-  console.error("No device config found. Make sure to deploy a device config to this device by running: `node devices.js --deployConfig=$HOSTNAME`")
+  console.error("No device config found. Make sure to deploy a device config to this device by running: `node setup.js --deployConfig=$HOSTNAME`")
   process.exit(1);
 }
 
 var systemConfig = JSON.parse(systemConfigFile);
 
-var hostname = argv.device || os.hostname();
+var deviceName = program.device || os.hostname();
 
-var deviceConfig = systemConfig.devices[hostname];
+var deviceConfig = systemConfig.devices[deviceName];
 
 if (!deviceConfig) {
-  console.error("No device config found for hostname:", hostname);
+  console.error("No device config found for hostname:", deviceName);
   process.exit(1);
 }
 
 // Set up the hubs
-
-if (!apps || apps.length == 0 ) {
-  console.error("No apps defined in system-config for hostname:", hostname);
-  process.exit(1);
-}
 
 var hubFactory = new HubFactory();
 
@@ -47,12 +49,16 @@ for (var i = 0; i < systemConfig.hubs.length; i++) {
 var apps = deviceConfig.apps;
 
 if (!apps || apps.length == 0 ) {
-  console.error("No apps defined in local-config");
+  console.error("No apps defined in config for device:", deviceName);
   process.exit(0);
 }
 
 for (var i = 0; i < apps.length; i++) {
   var appConfig = apps[i];
+
+  if (program.verbose) {
+    appConfig.verbose = true;
+  }
 
   var app = AppModule.startApp(appConfig);
 
