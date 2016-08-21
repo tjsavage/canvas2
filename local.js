@@ -30,7 +30,7 @@ var apps = localConfig.apps;
 
 if (!apps || apps.length == 0 ) {
   console.error("No apps defined in local-config");
-  process.exit(1);
+  process.exit(0);
 }
 
 for (var i = 0; i < apps.length; i++) {
