@@ -213,13 +213,13 @@ function deploySystemConfigToDevice(systemConfig, deviceConfig) {
     console.log("Error uploading podrc:", err);
     throw err;
   }).then(function(){
-    return ssh.execCommand('source ~/.bashrc && cat ~/.bashrc && pod web && pod restartall', {
+    console.log("Attempting to restart pod");
+    return ssh.execCommand(deviceConfig.homeDir + '/.npm-packages/bin/pod web && ' + deviceConfig.homeDir + '/.npm-packages/bin/pod restartall', {
       cwd: deviceConfig.homeDir,
       stream: 'both'
     }).then(function(result) {
       console.log("STDOUT:", result.stdout);
       console.log("STDERR:", result.stderr);
-      console.log("Successfully executed pod.")
     }, function(err) {
       console.log("Error executing pod:", err);
     })

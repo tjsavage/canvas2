@@ -181,7 +181,12 @@ Install canvas2 as a pod app:
 
 `pod remote canvas2 tjsavage/canvas2`
 
-### 5. Set up github webhook
+### 5. Deploy the system config to the new device
+
+
+Run `node setup.js deploy my-device`, replacing `my-device` with the name of your new device.
+
+### 6. Set up github webhook
 
 IMPORTANT: Add the ssh key of the device to Github: https://help.github.com/articles/generating-an-ssh-key/
 
@@ -195,9 +200,7 @@ In Content type enter "application/json"
 
 Don't enter a secret
 
-
-
-### 6. Start the app
+### 7. Start the app
 
 SSH back into the new device.
 
@@ -209,7 +212,6 @@ Start pod app:
 
 `pod start canvas2`
 
-?Deploy?
 
 ## Troubleshooting
 
