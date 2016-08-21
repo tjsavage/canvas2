@@ -4,7 +4,11 @@ var argv = require('yargs').argv;
 var fs = require('fs');
 var path = require('path');
 var os = require('os');
-var firebase = require('firebase');
+
+var hubs = require('./hubs');
+var HubFactory = hubs.HubFactory;
+
+var AppModule = require('./apps');
 
 var systemConfigFilePath = argv.systemConfigFile || path.resolve(process.env['HOME'], 'system-config.json');
 var systemConfigFile = fs.readFileSync(systemConfigFilePath, 'UTF-8');
@@ -25,21 +29,35 @@ if (!deviceConfig) {
   process.exit(1);
 }
 
-var apps = deviceConfig.apps;
+// Set up the hubs
 
 if (!apps || apps.length == 0 ) {
   console.error("No apps defined in system-config for hostname:", hostname);
   process.exit(1);
 }
 
-firebase.initializeApp(systemConfig.global.firebase);
-var firebaseDatabase = firebase.database();
+var hubFactory = new HubFactory();
 
-for (var i = 0; i < deviceConfig.apps.length; i++) {
+for (var i = 0; i < systemConfig.hubs.length; i++) {
+  hubFactory.getHubInstance(systemConfig.hubs[i]);
+}
+
+// Start the apps
+
+var apps = deviceConfig.apps;
+
+if (!apps || apps.length == 0 ) {
+  console.error("No apps defined in local-config");
+  process.exit(1);
+}
+
+for (var i = 0; i < apps.length; i++) {
   var appConfig = apps[i];
-  var finalConfig = constructFinalConfig(systemConfig, appConfig);
 
-  var App = require('./apps/' + appConfig.app);
-  var app = new App(finalConfig);
-  app.connect(firebaseDatabase);
+  var app = AppModule.startApp(appConfig);
+
+  if ('hubId' in appConfig) {
+    var hub = hubFactory.getHubInstanceById(appConfig.hubId);
+    app.registerHub(hub);
+  }
 }

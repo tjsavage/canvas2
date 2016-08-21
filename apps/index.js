@@ -10,6 +10,9 @@ var APP_MODULE_PATHS = {
 
 module.exports = {
   startApp: function(appConfig) {
+    if (!appConfig) {
+      throw new Error("No appConfig provided. Did you not list any apps?");
+    }
     if (!appConfig.app) {
       throw new Error("No appName provided in app config");
     }

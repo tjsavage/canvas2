@@ -4,7 +4,6 @@ var argv = require('yargs').argv;
 var fs = require('fs');
 var path = require('path');
 var os = require('os');
-var firebase = require('firebase');
 
 var hubs = require('./hubs');
 var HubFactory = hubs.HubFactory;
