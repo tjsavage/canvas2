@@ -33,7 +33,7 @@ Polymer({
     data.muni = {};
     data.muni.predictions = [];
 
-    var muniPredictions = state['local-munimonitor']['sf-muni']['KT']['5728'];
+    var muniPredictions = state['muni-monitor']['sf-muni']['KT']['5728'];
 
     for (var i = 0; i < muniPredictions.length; i++) {
       data.muni.predictions.push(muniPredictions[i]['seconds']);

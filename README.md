@@ -181,6 +181,21 @@ Install canvas2 as a pod app:
 
 `pod remote canvas2 tjsavage/canvas2`
 
+Edit the `~/.podrc` file to make sure canva2 runs with `device.js`:
+
+```
+# ~/.podrc
+{
+  ...
+  "apps": {
+    "canvas2": {
+      "remote": "tjsavage/canvas2",
+      "script": "device.js"
+    }
+  },
+}
+```
+
 ### 5. Deploy the system config to the new device
 
 

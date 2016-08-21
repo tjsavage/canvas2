@@ -12,8 +12,6 @@ let RestBus = class RestBus extends Base {
 
     super(config);
 
-
-
     var restbus = require('restbus');
 
     restbus.listen(this._config.port, function() {
