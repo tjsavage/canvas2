@@ -18,7 +18,15 @@ program
 
 
 var systemConfigFilePath = program.config || path.resolve(process.env['HOME'], 'system-config.json');
-var systemConfigFile = fs.readFileSync(systemConfigFilePath, 'UTF-8');
+
+var systemConfigFile;
+try {
+  fs.accessSync(systemConfigFilePath, fs.F_OK);
+  systemConfigFile = fs.readFileSync(systemConfigFilePath, 'UTF-8');
+} catch(e) {
+  systemConfigFilePath = path.resolve(process.cwd(), 'system-config.json');
+  systemConfigFile = fs.readFileSync(systemConfigFilePath, 'UTF-8')
+}
 
 if (!systemConfigFile) {
   console.error("No device config found. Make sure to deploy a device config to this device by running: `node setup.js --deployConfig=$HOSTNAME`")

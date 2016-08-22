@@ -20,11 +20,7 @@ Pieces of the canvas system:
 
 `device.js` - the file that runs on a particular device, that boots up an app. Takes a command-line argument that is the name of the app to run, and any config arguments for that particular app.
 
-`local.js` - a script to run on a local development machine to simulate as if it were a device in the system.
-
-`local-config.json` - similar to `system-config.json`, but only for the local development device.
-
-`deploy.js` - the local command-line script to deploy the configurations to all the appropriate devices on the network.
+`setup.js` - the local command-line script to deploy the configurations to all the appropriate devices on the network.
 
 `setupDevice.sh` - the script that gets copied to and run on each new device to set it up.
 
