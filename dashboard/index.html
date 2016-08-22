@@ -21,26 +21,36 @@
       firebase.initializeApp(config);
     </script>
 
+    <script src="/js/skycons.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.1/Chart.bundle.min.js"></script>
+
     <link rel="import" href="/bower_components/polymer/polymer.html">
     <link rel="import" href="/components/muni-block.html">
-    <link rel="import" href="/components/data-connection.html">
+    <link rel="import" href="/components/weather-forecast.html">
+    <link rel="import" href="/components/chartjs-chart.html">
+    <link rel="import" href="/bower_components/polymerfire/firebase-app.html">
+    <link rel="import" href="/bower_components/polymerfire/firebase-document.html">
   </head>
   <body>
     <template is="dom-bind">
-      <data-connection data="{{data}}"></data-connection>
-      <div class="row">
+      <firebase-app auth-domain="canvas2-d648a.firebaseapp.com"
+        database-url="https://canvas2-d648a.firebaseio.com"
+        api-key="AIzaSyDtDVxEYRO-33U7Wl0db_CIbd_7L1yqBC0"
+        storage-bucket="canvas2-d648a.appspot.com"></firebase-app>
 
-        <div class="column"><muni-block data="{{data.muni}}" class="column"></muni-block></div>
-        <div class="column">Thing</div>
-        <div class="column">Thing</div>
+      <firebase-document path="/state/muni-monitor/sf-muni/KT/5728" data="{{muni}}"></firebase-document>
+      <firebase-document path="/state/local-forecast" data="{{forecast}}"></firebase-document>
+
+      <div class="row">
+        <div class="column column-33"><muni-block state="{{muni}}"></muni-block></div>
+        <div class="column"><weather-forecast state="{{forecast}}"></weather-forecast></div>
       </div>
       <div class="row">
-        <div class="column">Thing</div>
+        <div class="column"></div>
         <div class="column">Thing</div>
         <div class="column">Thing</div>
       </div>
     </template>
 
-    <div>Sensor value: <span id="val"></span></div>
   </body>
 </html>

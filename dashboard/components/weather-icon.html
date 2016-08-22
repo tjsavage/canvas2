@@ -1,0 +1,49 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+<dom-module id="weather-icon">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      canvas {
+        width: 100%;
+      }
+    </style>
+    <canvas id="icon"></canvas>
+  </template>
+</dom-module>
+
+<script>
+Polymer({
+  is: 'weather-icon',
+  properties: {
+    icon: {
+      type: String,
+      observer: 'iconChanged'
+    },
+    color: {
+      type: String,
+      value: "white"
+    },
+    _addedIcon: {
+      type: Boolean,
+      value: false
+    }
+  },
+  ready: function() {
+    if(Polymer.skycons == undefined) {
+      Polymer.skycons = new Skycons({"color": this.color || "black"});
+    }
+  },
+  iconChanged: function(){
+    console.log("changed", this.icon, this.id);
+    if (!this._addedIcon) {
+      Polymer.skycons.add(this.$.icon, this.icon);
+      this._addedIcon = true;
+    } else {
+      Polymer.skycons.set(this.$.icon, this.icon);
+    }
+  }
+});
+</script>

@@ -1,0 +1,146 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="weather-icon.html">
+<link rel="import" href="chartjs-chart.html">
+
+<dom-module id="weather-forecast">
+  <template>
+    <style include="iron-flex"></style>
+    <style>
+      .current {
+        width: 100%;
+        height: auto;
+      }
+
+      .current .icon {
+        float: left;
+        width: 25%;
+      }
+
+      .current .icon canvas {
+        width: 100%;
+      }
+
+      .current .info {
+        float: left;
+        width: 50%;
+      }
+
+      .current .info .temperature {
+        font-size: 35px;
+      }
+
+      .daily {
+        width: 90%;
+        bottom: 0px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .hourly {
+        width: 100%;
+        height: auto;
+      }
+
+      .hourly .icon {
+        float: left;
+        width: 25%;
+      }
+
+      .hourly .info {
+        float: left;
+      }
+
+      .dailyForecast {
+        text-align: center;
+      }
+
+      weather-icon {
+        color: #fff;
+      }
+
+      .temp {
+        width: 90%;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+    </style>
+    <div class="container layout vertical">
+      <div class="current">
+        <div class="icon">
+          <weather-icon id="currentWeatherIcon" icon="[[state.currently.icon]]"></weather-icon>
+        </div>
+        <div class="info">
+          <h1>[[state.currently.temperature]]</h1>
+          <p>[[state.currently.summary]]</p>
+        </div>
+      </div>
+      <div class="hourly">
+        <div class="icon">
+          <weather-icon id="currentWeatherIcon" icon="[[state.hourly.icon]]"></weather-icon>
+        </div>
+        <div class="info">
+          <p>[[state.hourly.summary]]</p>
+        </div>
+      </div>
+      <div class="temp">
+        <chartjs-chart id="tempChart" kind="line" color="cccccc" data="[[hourlyTempData]]"></chartjs-chart>
+      </div>
+      <div class="daily">
+        <div class="forecasts layout horizontal">
+          <template is="dom-repeat" items="[[state.daily.data]]">
+            <div class="dailyForecast">
+              <span>[[computeDateFromSecondsTimestamp(item.time)]]<span>
+              <weather-icon icon="[[item.icon]]"></weather-icon>
+              <span>[[item.temperatureMax]]</span>
+            </div>
+          </template>
+        </div>
+      </div>
+    </div>
+  </template>
+</dom-module>
+
+<script>
+Polymer({
+  is: 'weather-forecast',
+  properties: {
+    state: {
+      type: Object
+    },
+    hourlyTempData: {
+      type: Object,
+      computed: '_computeHourlyTempData(state)'
+    }
+  },
+  ready: function() {
+  },
+  computeDateFromSecondsTimestamp: function(timestamp) {
+    var d = new Date(timestamp * 1000);
+    return "" + (d.getMonth() + 1) + "/" + d.getDate();
+  },
+  computeTimeFromTimestamp: function(timestamp) {
+    var d = new Date(timestamp * 1000);
+    return (d.getHours()) + ":" + d.getMinutes();
+  },
+  _computeHourlyTempData: function(state) {
+    var computedData = {
+      labels: [],
+      data: []
+    };
+    console.log(state);
+    if (!("hourly" in state)) {
+      return computedData;
+    }
+
+    for(var i = 0; i < 12; i++) {
+      var val = state.hourly.data[i];
+      computedData.labels.push(this.computeTimeFromTimestamp(val.time));
+      computedData.data.push(val.temperature);
+    }
+
+    return computedData;
+  }
+});
+</script>

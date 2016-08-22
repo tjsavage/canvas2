@@ -1,0 +1,210 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+<!--
+ Chartjs Element
+
+ Easy, object oriented client side graphs for designers and developers.
+
+ http://www.chartjs.org
+
+ @class chart-js
+ @origin-url http://www.chartjs.org/
+ @categories Charts and Graphs
+ @demo demo/index.html
+ @license Three-clause BSD
+-->
+
+<dom-module name="chartjs-chart">
+
+  <style>
+    :host {
+      display: inline-block;
+    }
+
+    #chart {
+      width: 100%;
+    }
+  </style>
+
+  <template>
+
+    <canvas id="chart"></canvas>
+
+  </template>
+
+  <script>
+
+    Polymer({
+
+      is: 'chartjs-chart',
+
+      properties: {
+
+        color: {
+          type: String,
+          value: '#AABBDD'
+        },
+
+        data: {
+          type: Object,
+          value: {
+            labels: ['January','February','March','April','May','June','July'],
+            data: [28,48,40,19,96,27,100]
+          }
+        },
+
+        options: {
+          type: Object,
+          value: function() {
+            return {}
+          }
+        },
+
+        kind: {
+          type: String,
+          value: function() {
+            return ['Radar', 'Line', 'Bar'][Math.floor(Math.random()*3)];
+          }
+        },
+
+        _chartData: {
+          type: Object,
+          computed: '_computeChartData(data, color)'
+        },
+
+        _chartOptions: {
+          type: Object,
+          computed: '_computeChartOptions(options, color)'
+        },
+
+        chart: {
+          type: Object
+        }
+
+      },
+
+      observers: [
+        'updateChart(kind, _chartOptions, ctx, _chartData)'
+      ],
+
+      attached: function() {
+        // TODO(sjmiles): measuring not available synchronously at attached (on Chrome)
+        // TODO(sjmiles): size of canvas not settable synchronously at attached (on Chrome)
+        this.async(this._createContext, 1);
+
+        Chart.defaults.global.legend.display = false;
+      },
+
+      _createContext: function() {
+        //this.width = this.offsetWidth;
+        //this.height = this.offsetHeight;
+        this.ctx = this.$.chart;
+      },
+
+      updateChart: function(kind, options, ctx, _chartData) {
+
+        if (this.chart){
+          this.chart.destroy();
+        }
+
+
+        var chart = new Chart(ctx, {
+          type: kind,
+          data: _chartData,
+          options: options,
+        });
+
+        this.chart = chart;
+        //var factory = chart[kind] || chart.Line;
+        //return factory.call(chart, _chartData, options);
+      },
+
+      _chartChanged: function(chart, old) {
+        if (old) {
+          console.log('destroying old chart');
+          old.destroy();
+        }
+      },
+
+      _computeChartData: function(data, color) {
+        if (data) {
+          var labels = data.labels;
+          var dataPts = data.data;
+        }
+        var rgbColor = this.hexToRgb(color).join(',');
+
+        var dataset = {
+          backgroundColor : 'rgba(' + rgbColor + ', 0.5)',
+          borderColor : 'rgba(' + rgbColor + ', 1)',
+          pointBackgroundColor : 'rgba(' + rgbColor + ', 1)',
+          pointBorderColor: 'rgba(' + rgbColor + ', 1)',
+          data: dataPts
+        };
+        return {
+          labels: labels,
+          datasets: [dataset]
+        };
+      },
+
+      _computeChartOptions: function(options, color) {
+        var chartOptions = options;
+        var rgbColor = this.hexToRgb(color).join(',');
+
+        if (color) {
+          chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              xAxes: [{
+                display: false,
+                gridLines: {
+                  color: "rgba(" + rgbColor + ", 1)"
+                },
+                ticks: {
+                  fontColor: "rgba(" + rgbColor + ", 1)"
+                }
+              }],
+              yAxes: [{
+                display: true,
+                gridLines: {
+                  color: "rgba(" + rgbColor + ", 1)"
+                },
+                ticks: {
+                  fontColor: "rgba(" + rgbColor + ", 1)"
+                }
+              }]
+            },
+            legend: {
+              labels: {
+                fontColor: "rgba(255, 255, 255, 1)"
+              }
+            }
+          }
+        }
+
+        return chartOptions;
+      },
+
+      hexToRgb: function(hex) {
+        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? [
+          parseInt(result[1], 16),
+          parseInt(result[2], 16),
+          parseInt(result[3], 16)
+        ] : [0, 0, 0];
+      }
+
+    });
+  </script>
+
+</dom-module>

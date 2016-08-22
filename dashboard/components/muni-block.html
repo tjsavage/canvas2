@@ -33,7 +33,7 @@
       }
     </style>
 
-    <div id="container" class$="[[state]]">
+    <div id="container">
       <h1>Next Muni</h1>
       <div class="times">
         <template is="dom-repeat" items="[[missed]]">
@@ -58,11 +58,15 @@ Polymer({
     GOOD: 900
   },
   properties: {
-    data: {
-      type: Object,
-      observer: 'dataChanged'
-    },
     state: {
+      type: Object
+    },
+    predictions: {
+      type: Array,
+      computed: '_computePredictionsFromState(state)',
+      observer: 'respondToUpdatedPredictions'
+    },
+    status: {
       type: String
     },
     missed: {
@@ -80,13 +84,13 @@ Polymer({
   secondsToTime: function(seconds) {
     return Math.floor(seconds / 60) + ":" + ((seconds % 60) < 10 ? '0' + seconds % 60: seconds % 60);
   },
-  dataChanged: function() {
+  respondToUpdatedPredictions: function() {
     var missed = [];
     var closestGood = 0;
     var next = [];
     var state = "";
-    for(var i = 0; i < this.data.predictions.length; i++) {
-      var prediction = this.data.predictions[i];
+    for(var i = 0; i < this.predictions.length; i++) {
+      var prediction = this.predictions[i];
       if (prediction < this.THRESHOLDS.MISSED) {
         missed.push(prediction);
       }
@@ -100,17 +104,26 @@ Polymer({
     }
 
     if (closestGood < this.THRESHOLDS.WARNING) {
-      state = 'warning'
+      status = 'warning'
     } else if (closestGood < this.THRESHOLDS.GOOD) {
-      state = 'good'
+      status = 'good'
     } else {
-      state = 'wait'
+      status = 'wait'
     }
 
     this.missed = missed;
     this.closestGood = closestGood;
     this.next = next;
-    this.state = state;
+    this.status = status;
+  },
+  _computePredictionsFromState: function(state) {
+    var predictions = [];
+
+    for (var i = 0; i < state.length; i++) {
+      predictions.push(state[i]['seconds']);
+    }
+
+    return predictions;
   }
 });
 </script>
