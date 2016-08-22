@@ -2,7 +2,7 @@
   "name": "canvas2",
   "version": "0.0.1",
   "description": "System for using raspberry pi's and other embeddable micro-pc's to manage a house.",
-  "main": "node device.js",
+  "main": "device.js",
   "directories": {
     "test": "test"
   },
