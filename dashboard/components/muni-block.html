@@ -64,6 +64,10 @@ Polymer({
     predictions: {
       type: Array,
       computed: '_computePredictionsFromState(state)',
+      observer: '_setInterpolatedPredictions'
+    },
+    interpolatedPredictions: {
+      type: Array,
       observer: 'respondToUpdatedPredictions'
     },
     status: {
@@ -89,8 +93,8 @@ Polymer({
     var closestGood = 0;
     var next = [];
     var state = "";
-    for(var i = 0; i < this.predictions.length; i++) {
-      var prediction = this.predictions[i];
+    for(var i = 0; i < this.interpolatedPredictions.length; i++) {
+      var prediction = this.interpolatedPredictions[i];
       if (prediction < this.THRESHOLDS.MISSED) {
         missed.push(prediction);
       }
@@ -119,11 +123,31 @@ Polymer({
   _computePredictionsFromState: function(state) {
     var predictions = [];
 
+
     for (var i = 0; i < state.length; i++) {
       predictions.push(state[i]['seconds']);
     }
 
     return predictions;
+  },
+  _setInterpolatedPredictions: function() {
+    var interpolatedPredictions = [];
+    for (var i = 0; i < this.predictions.length; i++) {
+      interpolatedPredictions.push(this.predictions[i]);
+    }
+    this.interpolatedPredictions = interpolatedPredictions;
+  },
+  updateInterpolatedPredictions: function() {
+    var interpolatedPredictions = [];
+
+    for (var i = 0; i < this.predictions.length; i++) {
+      interpolatedPredictions.push(this.interpolatedPredictions[i] - 1);
+    }
+
+    this.interpolatedPredictions = interpolatedPredictions;
+  },
+  ready: function() {
+    setInterval(this.updateInterpolatedPredictions.bind(this), 1000);
   }
 });
 </script>
