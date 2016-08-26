@@ -4,7 +4,7 @@ const Base = require('./Base.js');
 
 var ForecastIO = require('forecast');
 
-let Forecast = class Forecast extends Base {
+let WeatherForecast = class WeatherForecast extends Base {
   constructor(config) {
     config = Object.assign({
       service: 'forecast.io',
@@ -38,4 +38,4 @@ let Forecast = class Forecast extends Base {
   }
 }
 
-module.exports = Forecast;
+module.exports = WeatherForecast;

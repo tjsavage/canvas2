@@ -25,7 +25,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.1/Chart.bundle.min.js"></script>
 
     <link rel="import" href="/bower_components/polymer/polymer.html">
-    <link rel="import" href="/components/muni-block.html">
+    <link rel="import" href="/components/muni-monitor.html">
     <link rel="import" href="/components/weather-forecast.html">
     <link rel="import" href="/components/chartjs-chart.html">
     <link rel="import" href="/bower_components/polymerfire/firebase-app.html">
@@ -42,7 +42,7 @@
       <firebase-document path="/state/forecast" data="{{forecast}}"></firebase-document>
 
       <div class="row">
-        <div class="column column-33"><muni-block state="{{muni}}"></muni-block></div>
+        <div class="column column-33"><muni-monitor state="{{muni}}"></muni-monitor></div>
         <div class="column"><weather-forecast state="{{forecast}}"></weather-forecast></div>
       </div>
       <div class="row">

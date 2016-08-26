@@ -6,7 +6,7 @@ var APP_MODULE_PATHS = {
   'MuniMonitor': './MuniMonitor',
   'PIRSensor': './PIRSensor',
   'RestBus': './RestBus',
-  'Forecast': './Forecast'
+  'Forecast': './WeatherForecast'
 }
 
 module.exports = {
