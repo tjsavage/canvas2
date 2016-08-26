@@ -231,3 +231,8 @@ Start pod app:
 Make sure `pod web` service is running.
 
 SSH into the machine and run `pod web`.
+
+## Todo
+
+- [] Make background a random image with https://unsplash.it/200/300/?random
+- [] Add tweets block

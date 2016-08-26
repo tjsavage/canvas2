@@ -39,7 +39,7 @@
         storage-bucket="canvas2-d648a.appspot.com"></firebase-app>
 
       <firebase-document path="/state/muni-monitor/sf-muni/KT/5728" data="{{muni}}"></firebase-document>
-      <firebase-document path="/state/forecast" data="{{forecast}}"></firebase-document>
+      <firebase-document path="/state/weather-forecast" data="{{forecast}}"></firebase-document>
 
       <div class="row">
         <div class="column column-33"><muni-monitor state="{{muni}}"></muni-monitor></div>
@@ -51,6 +51,12 @@
         <div class="column">Thing</div>
       </div>
     </template>
+
+    <script>
+      setInterval(function() {
+        location.reload(true);
+      }, 3600000);
+    </script>
 
   </body>
 </html>
