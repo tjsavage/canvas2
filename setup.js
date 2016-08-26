@@ -11,8 +11,7 @@ var ping = require('ping');
 program
   .option('-c, --config <filepath>', 'The file path of the system-system.json')
 
-var systemConfigFilepath = process.env.CANVAS2_SYSTEM_CONFIG || program.config || path.resolve(__dirname, 'system-config.json');
-var systemConfig = JSON.parse(fs.readFileSync(systemConfigFilepath, 'UTF-8'));
+var systemConfig = require('./lib/system-config');
 
 program
   .command('devices')
@@ -41,28 +40,6 @@ program
       }
     });
   });
-
-/*
-if (argv.deployAll) {
-  //Deploy to all devices
-  var devices = systemConfig.devices;
-  var devicePromises = [];
-
-  for (var key in devices) {
-    var deviceConfig = devices[key];
-    console.log("Initializing", key);
-
-    var devicePromise = deployPodToDevice(deviceConfig);
-
-    devicePromises.push(devicePromise);
-  }
-
-  Promise.all(devicePromises).then(function() {
-    console.log("All devices deployed");
-    process.exit(0);
-  }).catch(function(err){console.log(err)})
-}
-*/
 
 program
   .command('deploy <device>')
