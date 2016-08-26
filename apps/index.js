@@ -6,7 +6,7 @@ var APP_MODULE_PATHS = {
   'MuniMonitor': './MuniMonitor',
   'PIRSensor': './PIRSensor',
   'RestBus': './RestBus',
-  'Forecast': './WeatherForecast'
+  'WeatherForecast': './WeatherForecast'
 }
 
 module.exports = {
@@ -19,7 +19,7 @@ module.exports = {
     }
     var appName = appConfig.app;
     if (!(appName in APP_MODULE_PATHS)) {
-      throw new Error('App' + appName + 'not in app modules');
+      throw new Error('App ' + appName + ' not in app modules');
     }
 
     var App = require(APP_MODULE_PATHS[appName]);
