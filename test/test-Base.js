@@ -125,6 +125,25 @@ describe('Base', function() {
           done();
         }).then(null, done);
       });
+    });
+
+    describe('validateConfig', function() {
+      it('should not throw on a valid config', function() {
+        instance._config = {
+          a: "a",
+          b: "b"
+        };
+
+        expect(function(){instance.validateConfig(['a', 'b'])}).to.not.throw();
+      });
+
+      it('should throw if missing a key', function() {
+        instance._config = {
+          a: "a"
+        }
+
+        expect(function(){instance.validateConfig(['a', 'b'])}).to.throw(/b/);
+      })
     })
   })
 })

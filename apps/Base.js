@@ -29,6 +29,15 @@ class Base {
     return this.connect();
   }
 
+  validateConfig(required) {
+    for(var i = 0; i < required.length; i++) {
+      var key = required[i];
+      if (!(key in this._config)) {
+        throw new Error("Required key not defined in config: " + key);
+      }
+    }
+  }
+
   setState(obj) {
     this._state = obj;
     this.outputIfNeeded(this._config.appId, 'setState:', this._state);

@@ -6,6 +6,7 @@ var APP_MODULE_PATHS = {
   'MuniMonitor': './MuniMonitor',
   'PIRSensor': './PIRSensor',
   'RestBus': './RestBus',
+  'TwitterUserStream': './TwitterUserStream',
   'WeatherForecast': './WeatherForecast'
 }
 
