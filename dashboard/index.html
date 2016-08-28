@@ -22,12 +22,34 @@
     </script>
 
     <script src="/js/skycons.js"></script>
+    <script>window.twttr = (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0],
+          t = window.twttr || {};
+        if (d.getElementById(id)) return t;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "https://platform.twitter.com/widgets.js";
+        fjs.parentNode.insertBefore(js, fjs);
+
+        t._e = [];
+        t.ready = function(f) {
+          t._e.push(f);
+        };
+
+        return t;
+      }(document, "script", "twitter-wjs"));
+    </script>
+    <meta
+    name="twitter:widgets:border-color"
+    content="#000000">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.1/Chart.bundle.min.js"></script>
 
     <link rel="import" href="/bower_components/polymer/polymer.html">
     <link rel="import" href="/components/muni-monitor.html">
     <link rel="import" href="/components/weather-forecast.html">
     <link rel="import" href="/components/chartjs-chart.html">
+    <link rel="import" href="/components/twitter-user-stream.html">
+    <link rel="import" href="/components/clock-element.html">
     <link rel="import" href="/bower_components/polymerfire/firebase-app.html">
     <link rel="import" href="/bower_components/polymerfire/firebase-document.html">
   </head>
@@ -40,13 +62,17 @@
 
       <firebase-document path="/state/muni-monitor/sf-muni/KT/5728" data="{{muni}}"></firebase-document>
       <firebase-document path="/state/weather-forecast" data="{{forecast}}"></firebase-document>
+      <firebase-document path="/state/local-twitter-user-stream" data="{{twitterUserStream}}"></firebase-document>
 
+      <div class="row">
+        <clock-element></clock-element>
+      </div>
       <div class="row">
         <div class="column column-33"><muni-monitor state="{{muni}}"></muni-monitor></div>
         <div class="column"><weather-forecast state="{{forecast}}"></weather-forecast></div>
       </div>
       <div class="row">
-        <div class="column"></div>
+        <div class="column"><twitter-user-stream state="{{twitterUserStream}}"></twitter-user-stream></div>
         <div class="column">Thing</div>
         <div class="column">Thing</div>
       </div>
@@ -56,6 +82,10 @@
       setInterval(function() {
         location.reload(true);
       }, 3600000);
+
+      setInterfal(function() {
+        document.getElement
+      })
     </script>
 
   </body>

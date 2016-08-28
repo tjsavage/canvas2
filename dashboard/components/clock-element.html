@@ -1,0 +1,22 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+<dom-module id="clock-element">
+  <template>
+    <style>
+    </style>
+
+    <h1 id="clock">[[time]]</h1>
+  </template>
+</dom-module>
+
+<script>
+Polymer({
+  is: 'clock-element',
+  ready: function() {
+    setInterval(this.updateTime.bind(this), 1000);
+  },
+  updateTime: function() {
+    this.time = (new Date());
+  }
+});
+</script>

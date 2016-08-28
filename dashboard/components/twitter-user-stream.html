@@ -1,0 +1,44 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+<link rel="import" href="./twitter-tweet.html">
+
+<dom-module id="twitter-user-stream">
+  <template>
+    <style>
+      :host {
+        display: block;
+        overflow: hidden;
+      }
+    </style>
+    <template is="dom-repeat" items="[[tweets]]">
+      <twitter-tweet tweet="[[item]]"></twitter-tweet>
+    </template>
+  </template>
+</dom-module>
+
+<script>
+Polymer({
+  is: 'twitter-user-stream',
+  properties: {
+    tweets: {
+      type: Array,
+      value: function(){ return []; },
+      computed: '_getTweets(state, numTweetsToDisplay)'
+    },
+    numTweetsToDisplay: {
+      type: Number,
+      value: 3
+    },
+    state: {
+      type: Object,
+      value: function(){ return {}; }
+    }
+  },
+  _getTweets: function(state) {
+    if (state.tweets) {
+      return state.tweets.slice(0, this.numTweetsToDisplay);
+    }
+    return [];
+  }
+});
+</script>

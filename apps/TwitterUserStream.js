@@ -46,13 +46,24 @@ let TwitterUserStream = class TwitterUserStream extends Base {
     if (!('created_at' in event)) {
       return;
     }
-    this.tweets.unshift(event);
-    this.tweets = this.tweets.slice(0,this._config.numTweetsToStore);
 
-    this.setState({
-      tweets: this.tweets,
-      lastTweet: this.tweets[0]
-    });
+    console.log('got tweet: ' + event.id_str);
+
+    var self = this;
+    this.client.get('statuses/oembed.json', {id: event.id_str}, function(err, embed) {
+      console.log(embed);
+
+      event.oembed = embed;
+
+      self.tweets.unshift(event);
+      self.tweets = self.tweets.slice(0,self._config.numTweetsToStore);
+
+      self.setState({
+        tweets: self.tweets,
+        lastTweet: self.tweets[0]
+      });
+    })
+
   }
 
   handleStreamError(error) {
