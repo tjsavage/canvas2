@@ -169,7 +169,7 @@ function deploySystemConfigToDevice(systemConfig, deviceConfig) {
 
     client.write({
       destination: deviceConfig.homeDir + '/system-config.json',
-      content: new Buffer(JSON.stringify(systemConfig, null, 2), 'utf-8')
+      content: new Buffer(JSON.stringify(systemConfig.configObj, null, 2), 'utf-8')
     }, function(err) {
       if (err) reject(err);
       console.log("Finished uploading system config");
