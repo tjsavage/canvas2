@@ -7,7 +7,7 @@ var APP_MODULE_PATHS = {
   'PIRSensor': './PIRSensor',
   'RestBus': './RestBus',
   'TwitterUserStream': './TwitterUserStream',
-  'WeatherForecast': './WeatherForecast'
+  'Weather': './Weather'
 }
 
 module.exports = {

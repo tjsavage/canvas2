@@ -1,11 +1,13 @@
 <link rel="import" href="/bower_components/polymer/polymer.html">
-<link rel="import" href="./muni-monitor.html">
-<link rel="import" href="./weather-forecast.html">
-<link rel="import" href=".chartjs-chart.html">
-<link rel="import" href="./twitter-user-stream.html">
-<link rel="import" href="./clock-element.html">
 <link rel="import" href="/bower_components/polymerfire/firebase-app.html">
 <link rel="import" href="/bower_components/polymerfire/firebase-document.html">
+
+<link rel="import" href="./muni-monitor.html">
+<link rel="import" href="./weather-forecast.html">
+<link rel="import" href="./chartjs-chart.html">
+<link rel="import" href="./twitter-user-stream.html">
+<link rel="import" href="./clock-element.html">
+<link rel="import" href="./weather-currently.html">
 
 <dom-module id="canvas2-dashboard">
   <template>
@@ -26,7 +28,6 @@
 
       .grid-item {
         background-color: #eee;
-        padding: 1em;
         display: inline-block;
         margin: 0 0 1px;
         width: 100%;
@@ -53,7 +54,7 @@
       storage-bucket="canvas2-d648a.appspot.com"></firebase-app>
 
     <firebase-document path="/state/muni-monitor/sf-muni/KT/5728" data="{{muni}}"></firebase-document>
-    <firebase-document path="/state/weather-forecast" data="{{forecast}}"></firebase-document>
+    <firebase-document path="/state/weather-forecast" data="{{weather}}"></firebase-document>
     <firebase-document path="/state/local-twitter-user-stream" data="{{twitterUserStream}}"></firebase-document>
 
     <div class="wrapper">
@@ -65,7 +66,7 @@
           <muni-monitor state="{{muni}}"></muni-monitor>
         </div>
         <div class="grid-item">
-          <weather-forecast state="{{forecast}}"></weather-forecast>
+          <weather-currently state="{{weather.currently}}"></weather-currently>
         </div>
         <div class="grid-item">
           <twitter-user-stream state="{{twitterUserStream}}"></twitter-user-stream>
