@@ -1,0 +1,88 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="./muni-monitor.html">
+<link rel="import" href="./weather-forecast.html">
+<link rel="import" href=".chartjs-chart.html">
+<link rel="import" href="./twitter-user-stream.html">
+<link rel="import" href="./clock-element.html">
+<link rel="import" href="/bower_components/polymerfire/firebase-app.html">
+<link rel="import" href="/bower_components/polymerfire/firebase-document.html">
+
+<dom-module id="canvas2-dashboard">
+  <template>
+    <style is="custom-style">
+      .wrapper {
+        width: 100%;
+        margin: 0 auto;
+      }
+
+      .grid {
+        margin: 0 0;
+        padding: 0;
+        column-gap: 2px;
+        column-fill: auto;
+        column-width: 400px;
+        height: 100%;
+      }
+
+      .grid-item {
+        background-color: #eee;
+        padding: 1em;
+        display: inline-block;
+        margin: 0 0 1px;
+        width: 100%;
+        position: relative;
+      }
+
+      @media only screen and (min-width: 400px) {
+        .grid {
+          column-count: 2;
+        }
+      }
+
+      @media only screen and (min-width: 700px) {
+        .grid {
+          column-count: 3;
+        }
+      }
+
+    </style>
+
+    <firebase-app auth-domain="canvas2-d648a.firebaseapp.com"
+      database-url="https://canvas2-d648a.firebaseio.com"
+      api-key="AIzaSyDtDVxEYRO-33U7Wl0db_CIbd_7L1yqBC0"
+      storage-bucket="canvas2-d648a.appspot.com"></firebase-app>
+
+    <firebase-document path="/state/muni-monitor/sf-muni/KT/5728" data="{{muni}}"></firebase-document>
+    <firebase-document path="/state/weather-forecast" data="{{forecast}}"></firebase-document>
+    <firebase-document path="/state/local-twitter-user-stream" data="{{twitterUserStream}}"></firebase-document>
+
+    <div class="wrapper">
+      <div class="grid">
+        <div class="grid-item">
+          <clock-element></clock-element>
+        </div>
+        <div class="grid-item">
+          <muni-monitor state="{{muni}}"></muni-monitor>
+        </div>
+        <div class="grid-item">
+          <weather-forecast state="{{forecast}}"></weather-forecast>
+        </div>
+        <div class="grid-item">
+          <twitter-user-stream state="{{twitterUserStream}}"></twitter-user-stream>
+        </div>
+        <div class="grid-item">
+          <img src="https://unsplash.it/200/300/?random" />
+        </div>
+        <div class="grid-item">
+          <img src="https://unsplash.it/300/300/?random" />
+        </div>
+      </div>
+    </div>
+  </template>
+</dom-module>
+
+<script>
+Polymer({
+  is: 'canvas2-dashboard'
+});
+</script>

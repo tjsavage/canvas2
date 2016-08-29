@@ -3,89 +3,29 @@
   <head>
     <meta charset="utf-8">
     <title>Welcome to Firebase Hosting</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
-    <link href="https://fonts.googleapis.com/css?family=Bungee" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.1.0/milligram.css">
-    <link rel="stylesheet" href="/style.css">
-
-    <script src="https://www.gstatic.com/firebasejs/3.2.0/firebase.js"></script>
-    <script>
-      // Initialize Firebase
-      var config = {
-        apiKey: "AIzaSyDtDVxEYRO-33U7Wl0db_CIbd_7L1yqBC0",
-        authDomain: "canvas2-d648a.firebaseapp.com",
-        databaseURL: "https://canvas2-d648a.firebaseio.com",
-        storageBucket: "canvas2-d648a.appspot.com",
-      };
-      firebase.initializeApp(config);
-    </script>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
 
     <script src="/js/skycons.js"></script>
-    <script>window.twttr = (function(d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0],
-          t = window.twttr || {};
-        if (d.getElementById(id)) return t;
-        js = d.createElement(s);
-        js.id = id;
-        js.src = "https://platform.twitter.com/widgets.js";
-        fjs.parentNode.insertBefore(js, fjs);
-
-        t._e = [];
-        t.ready = function(f) {
-          t._e.push(f);
-        };
-
-        return t;
-      }(document, "script", "twitter-wjs"));
-    </script>
-    <meta
-    name="twitter:widgets:border-color"
-    content="#000000">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.1/Chart.bundle.min.js"></script>
 
-    <link rel="import" href="/bower_components/polymer/polymer.html">
-    <link rel="import" href="/components/muni-monitor.html">
-    <link rel="import" href="/components/weather-forecast.html">
-    <link rel="import" href="/components/chartjs-chart.html">
-    <link rel="import" href="/components/twitter-user-stream.html">
-    <link rel="import" href="/components/clock-element.html">
-    <link rel="import" href="/bower_components/polymerfire/firebase-app.html">
-    <link rel="import" href="/bower_components/polymerfire/firebase-document.html">
+    <link rel="import" href="/components/canvas2-dashboard.html">
+    <style>
+      body {
+        font: 1em/1.67 'Open Sans', Arial, sans-serif;
+        margin: 0;
+        background: #222;
+      }
+    </style>
   </head>
   <body>
-    <template is="dom-bind">
-      <firebase-app auth-domain="canvas2-d648a.firebaseapp.com"
-        database-url="https://canvas2-d648a.firebaseio.com"
-        api-key="AIzaSyDtDVxEYRO-33U7Wl0db_CIbd_7L1yqBC0"
-        storage-bucket="canvas2-d648a.appspot.com"></firebase-app>
 
-      <firebase-document path="/state/muni-monitor/sf-muni/KT/5728" data="{{muni}}"></firebase-document>
-      <firebase-document path="/state/weather-forecast" data="{{forecast}}"></firebase-document>
-      <firebase-document path="/state/local-twitter-user-stream" data="{{twitterUserStream}}"></firebase-document>
-
-      <div class="row">
-        <clock-element></clock-element>
-      </div>
-      <div class="row">
-        <div class="column column-33"><muni-monitor state="{{muni}}"></muni-monitor></div>
-        <div class="column"><weather-forecast state="{{forecast}}"></weather-forecast></div>
-      </div>
-      <div class="row">
-        <div class="column"><twitter-user-stream state="{{twitterUserStream}}"></twitter-user-stream></div>
-        <div class="column">Thing</div>
-        <div class="column">Thing</div>
-      </div>
-    </template>
+    <canvas2-dashboard></canvas2-dashboard>
 
     <script>
       setInterval(function() {
         location.reload(true);
       }, 3600000);
 
-      setInterfal(function() {
-        document.getElement
-      })
     </script>
 
   </body>

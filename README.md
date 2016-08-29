@@ -236,3 +236,4 @@ SSH into the machine and run `pod web`.
 
 - [] Make background a random image with https://unsplash.it/200/300/?random
 - [] Add tweets block
+- [] UI Inspiration: https://dribbble.com/shots/1332769-Panels-Dashboard/attachments/188298
