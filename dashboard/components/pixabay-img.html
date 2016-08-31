@@ -1,0 +1,112 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+<dom-module id="pixabay-img">
+  <template>
+    <style>
+    :host {
+      display: block;
+      line-height: 0px;
+    }
+
+    img {
+      min-width: 100%;
+      height: auto;
+    }
+    </style>
+    <img src="[[_src]]">
+  </template>
+</dom-module>
+
+<script>
+Polymer({
+  is: 'pixabay-img',
+  properties: {
+    query: {
+      type: String,
+      value: ''
+    },
+    minWidth: {
+      type: Number,
+      value: 0
+    },
+    minHeight: {
+      type: Number,
+      value: 0
+    },
+    category: {
+      type: String,
+      value: ''
+    },
+    imageType: {
+      type: String,
+      value: "photo"
+    },
+    key: {
+      type: String,
+      value: '2407172-5cbaffba46cc537259d6549e9'
+    },
+    /*
+    * An object that caches requests from Pixabay for an hour at a time.
+    * Maps URL => {timeout: timestamp when request should be uncached, response: response data}
+    */
+    _requestCache: {
+      type: Object,
+      value: function() {
+        return {}
+      }
+    }
+  },
+  observers: [
+    '_computeSrc(key, query, minWidth, minHeight, category, imageType)'
+  ],
+  _computeSrc: function(key, query, minWidth, minHeight, category, imageType) {
+    console.log('ran');
+    var queryString = "";
+    if (key) {
+      queryString += "key=" + key + "&"
+    }
+    if (query) {
+      queryString += "q=" + encodeURIComponent(query) + "&"
+    }
+    if (minWidth) {
+      queryString += "min_width=" + minWidth + "&"
+    }
+    if (minHeight) {
+      queryString += "min_height" + minHeight + "&"
+    }
+    if (category) {
+      queryString += "category=" + category + "&"
+    }
+    if (imageType) {
+      queryString += "image_type=" + imageType + "&"
+    }
+
+    var self = this;
+    Promise.resolve().then(function() {
+      if (self._requestCache && queryString in self._requestCache) {
+        var fromCache = self._requestCache[queryString];
+        if (fromCache.timeout > Date.now()) {
+          return fromCache.response;
+        }
+      } else {
+        return fetch("https://pixabay.com/api/?" + queryString)
+          .then(function(response) {
+            if (response.status !== 200) {
+              console.error('Problem finding Pixabay image: '+ response.status);
+              return;
+            }
+
+            return response.json();
+          });
+      }
+    }).then(function(data) {
+      self._requestCache[queryString] = {
+        timeout: Date.now() + 3600000,
+        response: data
+      };
+
+      self._src = data.hits[Math.floor((Math.random() * data.hits.length))].webformatURL;
+    });
+  }
+});
+</script>
