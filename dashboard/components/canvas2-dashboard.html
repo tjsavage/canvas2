@@ -9,6 +9,7 @@
 <link rel="import" href="./clock-element.html">
 <link rel="import" href="./weather-currently.html">
 <link rel="import" href="./pixabay-img.html">
+<link rel="import" href="./hub-fixture-document.html">
 
 <dom-module id="canvas2-dashboard">
   <template>
@@ -49,14 +50,19 @@
 
     </style>
 
-    <firebase-app auth-domain="canvas2-d648a.firebaseapp.com"
-      database-url="https://canvas2-d648a.firebaseio.com"
-      api-key="AIzaSyDtDVxEYRO-33U7Wl0db_CIbd_7L1yqBC0"
-      storage-bucket="canvas2-d648a.appspot.com"></firebase-app>
+    <template is="dom-if" if="[[hubSource == 'firebase']]">
+      <firebase-app auth-domain="canvas2-d648a.firebaseapp.com"
+        database-url="https://canvas2-d648a.firebaseio.com"
+        api-key="AIzaSyDtDVxEYRO-33U7Wl0db_CIbd_7L1yqBC0"
+        storage-bucket="canvas2-d648a.appspot.com"></firebase-app>
 
-    <firebase-document path="/state/muni-monitor/sf-muni/KT/5728" data="{{muni}}"></firebase-document>
-    <firebase-document path="/state/weather" data="{{weather}}"></firebase-document>
-    <firebase-document path="/state/twitter-user-stream" data="{{twitterUserStream}}"></firebase-document>
+      <firebase-document path="/state/muni-monitor/sf-muni/KT/5728" data="{{muni}}"></firebase-document>
+      <firebase-document path="/state/weather" data="{{weather}}"></firebase-document>
+      <firebase-document path="/state/twitter-user-stream" data="{{twitterUserStream}}"></firebase-document>
+    </template>
+    <template is="dom-if" if="[[hubSource == 'fixture']]">
+      <hub-fixture-document path="/state/muni-monitor/sf-muni/KT/5728" data="{{muni}}"></hub-fixture-document>
+    </template>
 
     <div class="wrapper">
       <div class="grid">
@@ -88,6 +94,15 @@
 
 <script>
 Polymer({
-  is: 'canvas2-dashboard'
+  is: 'canvas2-dashboard',
+  properties: {
+    hubSource: {
+      type: String,
+      value: 'firebase'
+    },
+    attached: function() {
+      var queryParams = location.search.slice(1).split('&')
+    }
+  }
 });
 </script>
