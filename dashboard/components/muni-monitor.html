@@ -134,7 +134,6 @@ Polymer({
     this._updateProgressMeter(this.interpolatedPredictions);
   },
   _updateProgressMeter: function(interpolatedPredictions) {
-    console.log(interpolatedPredictions);
     // Cap at 30 minutes for indicator values;
     var indicatorValues = [];
     for(var i = 0; i < interpolatedPredictions.length; i++) {

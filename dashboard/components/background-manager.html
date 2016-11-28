@@ -3,8 +3,8 @@
 <script>
 Polymer({
   is: "background-manager",
-  attached: function() {
-    document.body.style.backgroundImage = "/img/backgrounds/winter-" + Math.floor(Math.random() * 72);
+  ready: function() {
+    document.body.style.backgroundImage = "linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(/img/backgrounds/winter-" + Math.floor(Math.random() * 72) + ")";
   }
 });
 </script>
