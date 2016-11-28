@@ -10,6 +10,8 @@
 <link rel="import" href="./weather-currently.html">
 <link rel="import" href="./pixabay-img.html">
 <link rel="import" href="./hub-fixture-document.html">
+<link rel="import" href="./background-manager.html">
+<link rel="import" href="./progress-meter.html">
 
 <dom-module id="canvas2-dashboard">
   <template>
@@ -29,7 +31,8 @@
       }
 
       .grid-item {
-        background-color: #eee;
+        /* background-color: #eee; */
+        color: white;
         display: inline-block;
         margin: 0 0 1px;
         width: 100%;
@@ -75,20 +78,12 @@
         <div class="grid-item">
           <weather-currently state="{{weather.currently}}"></weather-currently>
         </div>
-        <div class="grid-item">
+        <!--div class="grid-item">
           <twitter-user-stream state="{{twitterUserStream}}"></twitter-user-stream>
-        </div>
-        <div class="grid-item">
-          <img src="https://unsplash.it/200/300/?random" />
-        </div>
-        <div class="grid-item">
-          <img src="https://unsplash.it/300/300/?random" />
-        </div>
-        <div class="grid-item">
-          <pixabay-img query="cloudy"></pixabay-img>
-        </div>
+        </div-->
       </div>
     </div>
+    <background-manager></background-manager>
   </template>
 </dom-module>
 
@@ -101,7 +96,7 @@ Polymer({
       value: 'firebase'
     },
     attached: function() {
-      var queryParams = location.search.slice(1).split('&')
+      var queryParams = location.search.slice(1).split('&');
     }
   }
 });

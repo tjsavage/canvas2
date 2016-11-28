@@ -1,0 +1,7 @@
+index=0
+for i in *
+do
+  NEWNAME="winter-$index"
+  mv -- "$i" "$NEWNAME"
+  (( index++ ))
+done

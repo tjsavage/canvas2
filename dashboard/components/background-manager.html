@@ -1,0 +1,10 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+<script>
+Polymer({
+  is: "background-manager",
+  attached: function() {
+    document.body.style.backgroundImage = "/img/backgrounds/winter-" + Math.floor(Math.random() * 72);
+  }
+});
+</script>

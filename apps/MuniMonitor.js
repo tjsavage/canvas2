@@ -34,6 +34,10 @@ let MuniMonitor = class MuniMonitor extends Base {
       request(this._config.restbusUrl + '/agencies/' + stopObj.agency + '/routes/' + stopObj.route + '/stops/' + stopObj.stop + '/predictions', function(err, res, body) {
         if (!err && res.statusCode == 200) {
           var result = JSON.parse(body);
+          if (!result.length) {
+            this.log("Muni monitor - no result from request to restbus");
+            return;
+          }
           var predictions = result[0].values;
 
           var stateObj = {};

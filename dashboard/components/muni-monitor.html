@@ -1,5 +1,7 @@
 <link rel="import" href="/bower_components/polymer/polymer.html">
 
+<link rel="import" href="./progress-meter.html">
+
 <dom-module id="muni-monitor">
   <template>
     <style>
@@ -27,14 +29,14 @@
         text-align: center;
       }
 
-      h2, h3, h4 {
+      h1, h2, h3, h4 {
         font-family: 'Roboto';
       }
     </style>
 
     <div id="container">
       <h1>Next Muni</h1>
-      <div class="times">
+      <!--div class="times">
         <template is="dom-repeat" items="[[missed]]">
           <h4>[[secondsToTime(item)]]</h4>
         </template>
@@ -42,7 +44,9 @@
         <template is="dom-repeat" items="[[next]]">
           <h4>[[secondsToTime(item)]]</h4>
         </template>
-      </div>
+      </div-->
+
+      <progress-meter id="meter" threshold-sizes="[[thresholdSizes]]" indicator-values="[12, 16, 23]" style="width: 100%; height: 50px;"></progress-meter>
 
     <div>
   </template>
@@ -82,6 +86,14 @@ Polymer({
     next: {
       type: Array,
       value: function(){ return []}
+    },
+    thresholdSizes: {
+      type: Array,
+      value: function(){ return [720, 180, 900]}
+    },
+    indicatorValues: {
+      type: Array,
+      value: function(){}
     }
   },
   secondsToTime: function(seconds) {
@@ -118,6 +130,22 @@ Polymer({
     this.closestGood = closestGood;
     this.next = next;
     this.status = status;
+
+    this._updateProgressMeter(this.interpolatedPredictions);
+  },
+  _updateProgressMeter: function(interpolatedPredictions) {
+    console.log(interpolatedPredictions);
+    // Cap at 30 minutes for indicator values;
+    var indicatorValues = [];
+    for(var i = 0; i < interpolatedPredictions.length; i++) {
+      if (interpolatedPredictions[i] < 30*60) {
+        indicatorValues.push(interpolatedPredictions[i])
+      } else {
+        indicatorValues.push(30*60);
+      }
+    }
+
+    this.$.meter.indicatorValues = indicatorValues;
   },
   _computePredictionsFromState: function(state) {
     var predictions = [];
