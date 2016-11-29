@@ -21,7 +21,7 @@ class Base {
     this._config = config;
     this._state = {};
 
-    setInterval(this.heartbeat.bind(this), 60000);
+    setInterval(this.heartbeat.bind(this), 10000);
   }
 
   registerHub(hubInstance) {
