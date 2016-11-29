@@ -1,6 +1,7 @@
 <link rel="import" href="/bower_components/polymer/polymer.html">
 <link rel="import" href="/bower_components/polymerfire/firebase-app.html">
 <link rel="import" href="/bower_components/polymerfire/firebase-document.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
 <link rel="import" href="./muni-monitor.html">
 <link rel="import" href="./weather-forecast.html">
@@ -16,6 +17,10 @@
 <dom-module id="canvas2-dashboard">
   <template>
     <style is="custom-style">
+      .dashboard-wrapper {
+        color: white;
+      }
+
       .wrapper {
         width: 100%;
         margin: 0 auto;
@@ -51,6 +56,69 @@
         }
       }
 
+      clock-element {
+        --date-style: {
+          font-size: 3em;
+        };
+        --time-style: {
+          font-size: 4em;
+          letter-spacing: -3px;
+        };
+      }
+
+      weather-currently {
+        --temperature-style: {
+          font-size: 2em;
+        }
+      }
+
+      muni-monitor {
+        margin: 5px;
+        width: 80%;
+      }
+
+      twitter-user-stream {
+        text-align: right;
+      }
+
+      .dashboard-wrapper > * {
+        position: absolute;
+      }
+
+      #center {
+        width: 100%;
+        text-align: center;
+        top: 20%;
+      }
+
+      #center-wrapper {
+        display: inline-block;
+        position: relative;
+      }
+
+      #top-left {
+        top: 0;
+        left: 0;
+        width: 50%;
+      }
+
+      #top-right {
+        top: 0;
+        right: 0;
+      }
+
+      #bottom-left {
+        bottom: 0;
+        left: 0;
+        width: 50%;
+      }
+
+      #bottom-right {
+        bottom: 0;
+        right: 0;
+      }
+
+
     </style>
 
     <template is="dom-if" if="[[hubSource == 'firebase']]">
@@ -63,11 +131,45 @@
       <firebase-document path="/state/weather" data="{{weather}}"></firebase-document>
       <firebase-document path="/state/twitter-user-stream" data="{{twitterUserStream}}"></firebase-document>
     </template>
-    <template is="dom-if" if="[[hubSource == 'fixture']]">
+    <!--template is="dom-if" if="[[hubSource == 'fixture']]">
       <hub-fixture-document path="/state/muni-monitor/sf-muni/KT/5728" data="{{muni}}"></hub-fixture-document>
-    </template>
+    </template-->
 
-    <div class="wrapper">
+    <div class="dashboard-wrapper">
+
+      <div id="center">
+        <div id="center-wrapper">
+          <clock-element></clock-element>
+        </div>
+        <div>
+          <weather-currently state="{{weather.currently}}"></weather-currently>
+        </div>
+        <div class="forecast-summary">
+          <span>[[weather.hourly.summary]]<br />
+                [[weather.daily.summary]]
+          </span>
+        </div>
+      </div>
+
+      <div id="top-left">
+        <p></p>
+      </div>
+
+      <div id="top-right">
+        <p></p>
+      </div>
+
+      <div id="bottom-left">
+        <muni-monitor state="{{muni}}"></muni-monitor>
+      </div>
+
+      <div id="bottom-right">
+        <twitter-user-stream state="{{twitterUserStream}}" num-tweets-to-display="1"></twitter-user-stream>
+      </div>
+
+    </div>
+
+    <!--div class="wrapper">
       <div class="grid">
         <div class="grid-item">
           <clock-element></clock-element>
@@ -78,11 +180,11 @@
         <div class="grid-item">
           <weather-currently state="{{weather.currently}}"></weather-currently>
         </div>
-        <!--div class="grid-item">
+        <div class="grid-item">
           <twitter-user-stream state="{{twitterUserStream}}"></twitter-user-stream>
-        </div-->
+        </div>
       </div>
-    </div>
+    </div-->
     <background-manager></background-manager>
   </template>
 </dom-module>

@@ -10,11 +10,14 @@
       }
 
       .date {
-        font-size: 1.4em;
-        color: #888;
+        font-size: var(--date-font-size, 1.4em);
+        opacity: 0.8;
+        @apply(--date-style);
       }
+
       .time {
-        font-size: 1.8em;
+        font-size: var(--time-font-size, 1.8em);
+        @apply(--time-style);
       }
     </style>
     <div class="container">
