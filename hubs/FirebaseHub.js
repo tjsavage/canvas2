@@ -26,11 +26,13 @@ class FirebaseHub extends AbstractHub {
 
   setState(appId, obj) {
     var ref = this._stateRef.child(appId);
+    this.updated(appId);
     return ref.set(obj);
   }
 
   updateState(appId, obj) {
     var ref = this._stateRef.child(appId);
+    this.updated(appId);
     return ref.update(obj);
   }
 
@@ -60,6 +62,13 @@ class FirebaseHub extends AbstractHub {
       lastConnected: this.timestamp(),
       hostname: os.hostname(),
       networkInterfaces: os.networkInterfaces()
+    });
+  }
+
+  updated(appId) {
+    var ref = this._systemRef.child(appId);
+    return ref.update({
+      lastUpdate: this.timestamp()
     });
   }
 
