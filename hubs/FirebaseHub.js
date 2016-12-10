@@ -68,7 +68,7 @@ class FirebaseHub extends AbstractHub {
   updated(appId) {
     var ref = this._systemRef.child(appId);
     return ref.update({
-      lastUpdate: this.timestamp()
+      lastUpdated: this.timestamp()
     });
   }
 
