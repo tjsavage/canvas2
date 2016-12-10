@@ -26,14 +26,16 @@ class FirebaseHub extends AbstractHub {
 
   setState(appId, obj) {
     var ref = this._stateRef.child(appId);
-    this.updated(appId);
-    return ref.set(obj);
+    return this.updated(appId).then(function() {
+      return ref.set(obj);
+    });
   }
 
   updateState(appId, obj) {
     var ref = this._stateRef.child(appId);
-    this.updated(appId);
-    return ref.update(obj);
+    return this.updated(appId).then(function() {
+      return ref.update(obj);
+    });
   }
 
   log(appId, string) {
