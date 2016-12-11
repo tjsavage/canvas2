@@ -1,8 +1,8 @@
 # canvas2
 
-System for using raspberry pi's and other embeddable micro-pc's to manage a house.
+System for using raspberry pi's and other embeddable micro-pc's to manage a house. It also can support managing programs on virtual hosts .
 
-Canvas2 relies heavily on [pod](https://github.com/yyx990803/pod) for deployment. The central datastore where the state of the system is meant to be pluggable, but the system is initially designed to use [Firebase](https://console.firebase.google.com) for storing the state of the system.
+Canvas2 relies heavily on [pod](https://github.com/yyx990803/pod) for deployment. The central datastore for system state is meant to be pluggable, but the system is initially designed to use [Firebase](https://console.firebase.google.com) for storing the state of the system.
 
 The basics:
 
@@ -16,9 +16,9 @@ Pieces of the canvas system:
 
 ### In the repo
 
-`system-config.json` - the overall config file that describes the entire system.
+`system-config.json` - the overall config file that describes the entire system. This is copied to every device.
 
-`device.js` - the file that runs on a particular device, that boots up an app. Takes a command-line argument that is the name of the app to run, and any config arguments for that particular app.
+`device.js` - the file that runs on a particular device, that boots up all the apps the device is responsible for running. Takes command-line arguments for where to look for the system config, and what device this is being run on.
 
 `setup.js` - the local command-line script to deploy the configurations to all the appropriate devices on the network.
 
@@ -31,6 +31,8 @@ Pieces of the canvas system:
 `pod/` - Contains the repo and app for pod.
 
 `system-config.json` - The system config that is copied to the device.
+
+`.pm2/logs/*` - Pod uses `pm2` under the hood to run, so logs for the instances are stored here.
 
 
 ## Firebase Database
@@ -53,9 +55,18 @@ The rough schema for the firebase database will be:
 
 # Getting Started
 
-## Setting up the Raspberry Pi
+## Setting up device
 
-### 1. Set up static IP
+### 0. Set up the device
+
+Some basic setup to get going.
+
+#### Setting up a Debian Machine (non-Raspberry Pi)
+
+Follow: https://www.digitalocean.com/community/tutorials/initial-server-setup-with-debian-8 to set up the machine.
+
+
+### 1. Set up static IP (Raspberry Pi Only)
 
 See: http://raspberrypi.stackexchange.com/questions/37920/how-do-i-set-up-networking-wifi-static-ip
 
@@ -112,7 +123,7 @@ Your `system-config.json` file should look something like:
 `my-device-name` corresponds to the key in your `system-config.json` file.
 
 ```
-node setup.js --setupDevice=my-device-name
+node setup.js setup my-device-name
 ```
 
 ### 4. Set up Pod on the device.
@@ -131,7 +142,8 @@ Edit the ~/.podrc file to get a little more specific:
 
 ```
 {
-    // where pod puts all the stuff
+    // where pod puts all the stuff. Use pi or other appropriate
+    // home directory
     "root": "/home/pi/pod",
 
     // default env
@@ -177,25 +189,15 @@ Install canvas2 as a pod app:
 
 `pod remote canvas2 tjsavage/canvas2`
 
-Edit the `~/.podrc` file to make sure canva2 runs with `device.js`:
-
-```
-# ~/.podrc
-{
-  ...
-  "apps": {
-    "canvas2": {
-      "remote": "tjsavage/canvas2",
-      "script": "device.js"
-    }
-  },
-}
-```
+This should now have canvas2 repository installed in ~/pod/apps
 
 ### 5. Deploy the system config to the new device
 
+Go back to your development machine.
 
 Run `node setup.js deploy my-device`, replacing `my-device` with the name of your new device.
+
+Things won't work yet - you have to kick off the webhook to get the repo installed first in the next step.
 
 ### 6. Set up github webhook
 

@@ -75,7 +75,7 @@ program
 program
   .command('setup <device>')
   .action(function(device) {
-    var deviceKey = argv.setupDevice;
+    var deviceKey = device;
     var devices = systemConfig.devices;
 
     var deviceConfig = devices[deviceKey];
@@ -191,7 +191,7 @@ function deploySystemConfigToDevice(systemConfig, deviceConfig) {
     throw err;
   }).then(function(){
     console.log("Attempting to restart pod");
-    return ssh.execCommand(deviceConfig.homeDir + '/.npm-packages/bin/pod web && ' + deviceConfig.homeDir + '/.npm-packages/bin/pod stopall && ' + deviceConfig.homeDir + '/.npm-packages/bin/pod startall', {
+    return ssh.execCommand('pod web && pod stopall && pod startall', {
       cwd: deviceConfig.homeDir,
       stream: 'both'
     }).then(function(result) {
