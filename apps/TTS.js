@@ -6,6 +6,7 @@ const Base = require('./Base.js');
 
 const url = require('url');
 const speak = require('../lib/speak');
+const Sound = require('../lib/play');
 
 let TTS = class TTS extends Base {
   constructor(config) {
@@ -27,8 +28,14 @@ let TTS = class TTS extends Base {
 
   _requestHandler(request, response) {
     var urlParts = url.parse(request.url, true);
-    this.log("Saying: " + urlParts.query.say);
+
+    if (urlParts.path == "/ding") {
+      var ding = new Sound('../resources/sound/ding.wav');
+      ding.play();
+    }
+
     if (urlParts.query.say) {
+      console.log(urlParts.query.say);
       speak.speak(urlParts.query.say);
     }
 
