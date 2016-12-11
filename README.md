@@ -185,6 +185,8 @@ start on (local-filesystems and net-device-up IFACE!=lo)
 exec sudo -u <username> /home/pi/.node-install/bin/node /home/pi/.npm-packages/bin/pod startall
 ```
 
+Make sure that the `.bashrc` file will run on non-interactive shell sessions. Look for lines in the `~/.bashrc` file along the lines of "If not running interactively, don't do anything" and comment them out.
+
 Install canvas2 as a pod app:
 
 `pod remote canvas2 tjsavage/canvas2`
@@ -197,7 +199,6 @@ Go back to your development machine.
 
 Run `node setup.js deploy my-device`, replacing `my-device` with the name of your new device.
 
-Things won't work yet - you have to kick off the webhook to get the repo installed first in the next step.
 
 ### 6. Set up github webhook
 
@@ -233,6 +234,12 @@ Start pod app:
 Make sure `pod web` service is running.
 
 SSH into the machine and run `pod web`.
+
+### Getting error when deploying like "bash: pod: command not found"?
+
+Make sure that the `.bashrc` file will execute on non-interactive shell sessions.
+
+Look for lines in the `~/.bashrc` file along the lines of "If not running interactively, don't do anything" and comment them out.
 
 ## Todo
 

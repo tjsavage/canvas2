@@ -191,9 +191,9 @@ function deploySystemConfigToDevice(systemConfig, deviceConfig) {
     throw err;
   }).then(function(){
     console.log("Attempting to restart pod");
-    return ssh.execCommand('pod web && pod stopall && pod startall', {
-      cwd: deviceConfig.homeDir,
-      stream: 'both'
+    return ssh.execCommand('source ~/.bashrc; pod web && pod stopall && pod startall', {
+        cwd: deviceConfig.homeDir,
+        stream: 'both'
     }).then(function(result) {
       console.log("STDOUT:", result.stdout);
       console.log("STDERR:", result.stderr);
