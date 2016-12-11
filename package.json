@@ -14,7 +14,6 @@
     "forecast": "^0.2.1",
     "jsonfile": "^2.3.1",
     "node-ssh": "^2.0.7",
-    "onoff": "^1.1.1",
     "ping": "^0.1.10",
     "randomstring": "^1.1.5",
     "request": "^2.74.0",
@@ -34,7 +33,7 @@
     "should": "^10.0.0"
   },
   "optionalDependencies": {
-    "rpi-gpio": "^0.7.0"
+    "onoff": "^1.1.1"
   },
   "scripts": {
     "test": "mocha"
