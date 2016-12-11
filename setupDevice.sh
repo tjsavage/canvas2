@@ -45,4 +45,7 @@ if [ ! -d ~/pod ]
     mkdir ~/pod
 fi
 
+echo "Doing default installs now."
+sudo apt-get install espeak --assume-yes
+
 echo "COMPLETE. Now SSH into the device and set up Pod."

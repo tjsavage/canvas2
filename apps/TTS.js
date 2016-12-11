@@ -5,7 +5,7 @@
 const Base = require('./Base.js');
 
 const url = require('url');
-const say = require('say');
+const speak = require('../lib/speak');
 
 let TTS = class TTS extends Base {
   constructor(config) {
@@ -26,12 +26,13 @@ let TTS = class TTS extends Base {
   }
 
   _requestHandler(request, response) {
-    response.end("It works!");
     var urlParts = url.parse(request.url, true);
     this.log("Saying: " + urlParts.query.say);
     if (urlParts.query.say) {
-      say.speak(urlParts.query.say);
+      speak.speak(urlParts.query.say);
     }
+
+    response.end("It works!");
   }
 }
 
