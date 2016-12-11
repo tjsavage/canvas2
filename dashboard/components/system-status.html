@@ -1,0 +1,113 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+<dom-module id="system-status">
+  <template>
+    <style>
+      #indicator {
+        height: 50px;
+        width: 50px;
+        border-radius: 50%;
+        margin: 10px;
+      }
+
+      .status-note {
+        margin-left: 5px;
+      }
+
+      .good {
+        background-color: rgb(43,194,83);
+      }
+
+      .bad {
+        background-color: #f0a3a3;
+      }
+    </style>
+    <div id="indicator" class$="[[status]]">
+    </div>
+    <template is="dom-if" if="[[failingApps.length]]">
+      <div class="status-note">
+        <h3>Having trouble with:</h3>
+        <template is="dom-repeat" items="[[failingApps]]">
+          <p>[[item]]</p>
+        </template>
+      </div>
+    </template>
+  </template>
+</dom-module>
+
+<script>
+Polymer({
+  is: 'system-status',
+  properties: {
+    system: {
+      type: Object,
+      value: function() {
+        return {}
+      }
+    },
+    important: {
+      type: Array,
+      value: function() {
+        return []
+      }
+    },
+    status: {
+      type: String,
+      value: "good"
+    },
+    failingApps: {
+      type: Array,
+      value: function() {
+        return []
+      }
+    }
+  },
+  ready: function() {
+    setInterval(this._checkStatus.bind(this), 5000);
+    this._checkStatus();
+  },
+  _checkStatus: function() {
+    if (!this.important) {
+      return;
+    }
+
+    var failingApps = [];
+
+    for(var i = 0; i < this.important.length; i++) {
+      var importantAppInfo = this.important[i];
+
+      if (!importantAppInfo || !this.system[importantAppInfo.appId]) {
+        continue;
+      }
+
+      if (!this._appState(this.system[importantAppInfo.appId], importantAppInfo)) {
+        failingApps.push(importantAppInfo.appId);
+      }
+    }
+
+    if (failingApps.length > 0) {
+      this.status = "bad";
+      this.failingApps = failingApps;
+    } else {
+      this.status = "good";
+      this.failingApps = [];
+    }
+  },
+  _appState: function(appSystemData, importantAppInfo) {
+    var lastHeartbeat = Date.parse(appSystemData.lastHeartbeat);
+    var lastUpdated = Date.parse(appSystemData.lastUpdated);
+
+    var now = Date.now();
+    var secondsSinceLastHeartbeat = (now - lastHeartbeat)/1000;
+    var secondsSinceLastUpdated = (now - lastUpdated)/1000;
+
+    if (secondsSinceLastHeartbeat > 120) {
+      return false;
+    }
+    if (secondsSinceLastUpdated > importantAppInfo.updateFrequency) {
+      return false;
+    }
+    return true;
+  }
+});
+</script>

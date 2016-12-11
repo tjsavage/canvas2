@@ -13,6 +13,7 @@
 <link rel="import" href="./hub-fixture-document.html">
 <link rel="import" href="./background-manager.html">
 <link rel="import" href="./progress-meter.html">
+<link rel="import" href="./system-status.html">
 
 <dom-module id="canvas2-dashboard">
   <template>
@@ -127,6 +128,7 @@
         api-key="AIzaSyDtDVxEYRO-33U7Wl0db_CIbd_7L1yqBC0"
         storage-bucket="canvas2-d648a.appspot.com"></firebase-app>
 
+      <firebase-document path="/system" data="{{system}}"></firebase-document>
       <firebase-document path="/state/cloud-muni-monitor/sf-muni/KT/5728" data="{{muni}}"></firebase-document>
       <firebase-document path="/state/cloud-weather" data="{{weather}}"></firebase-document>
       <firebase-document path="/state/cloud-twitter-user-stream" data="{{twitterUserStream}}"></firebase-document>
@@ -152,7 +154,7 @@
       </div>
 
       <div id="top-left">
-        <p></p>
+        <system-status system="{{system}}" important='[{"appId": "cloud-muni-monitor", "updateFrequency": 120}, {"appId": "cloud-twitter-user-stream", "updateFrequency": 6000}]'></system-status>
       </div>
 
       <div id="top-right">
@@ -169,22 +171,6 @@
 
     </div>
 
-    <!--div class="wrapper">
-      <div class="grid">
-        <div class="grid-item">
-          <clock-element></clock-element>
-        </div>
-        <div class="grid-item">
-          <muni-monitor state="{{muni}}"></muni-monitor>
-        </div>
-        <div class="grid-item">
-          <weather-currently state="{{weather.currently}}"></weather-currently>
-        </div>
-        <div class="grid-item">
-          <twitter-user-stream state="{{twitterUserStream}}"></twitter-user-stream>
-        </div>
-      </div>
-    </div-->
     <background-manager></background-manager>
   </template>
 </dom-module>
