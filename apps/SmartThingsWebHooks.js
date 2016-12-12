@@ -62,6 +62,7 @@ let SmartThingsWebHooks = class SmartThingsWebHooks extends Base {
       if (body) {
         var data = JSON.parse(body);
 
+        self.log(body);
         var stateUpdate = self.requestBodyToStateObject(data);
 
         self.updateState(stateUpdate);
