@@ -42,6 +42,11 @@ let SecuritySystem = class SecuritySystem extends Base {
 
     super(config);
 
+    this.setState({
+        warningThreshold: this._config.warningThreshold,
+        dangerThreshold: this._config.dangerThreshold
+    });
+
     var server = http.createServer(this.handleRequest.bind(this));
     var port = this._config.port
     server.listen(port, function(err) {
