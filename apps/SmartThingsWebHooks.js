@@ -73,20 +73,14 @@ let SmartThingsWebHooks = class SmartThingsWebHooks extends Base {
   }
 
   requestBodyToStateObject(body) {
-    var deviceState = {};
-    deviceState[body.name] = body.value;
-
-    var device = {
-      displayName: body.display_name,
-      locationId: body.location_id,
-      hubId: body.hub_id,
-    }
-
     var overallUpdate = {}
     overallUpdate['/' + body.id + '/displayName'] = body.display_name;
     overallUpdate['/' + body.id + '/locationId'] = body.location_id;
     overallUpdate['/' + body.id + '/hubId'] = body.hub_id;
-    overallUpdate['/' + body.id + '/state/' + body.name] = body.value;
+    overallUpdate['/' + body.id + '/state/' + body.name] = {
+      lastUpdated: (new Date()),
+      value: body.value
+    };
 
     return overallUpdate;
   }
