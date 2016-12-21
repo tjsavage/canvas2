@@ -23,6 +23,9 @@ class MemoryHub extends AbstractHub {
   */
   setState(appId, obj) {
     this.state[appId] = obj;
+    if(this._config.verbose) {
+      console.log("Set state:", this.state);
+    }
     return Promise.resolve();
   }
 
@@ -35,6 +38,9 @@ class MemoryHub extends AbstractHub {
     } else {
       this.state[appId] = obj;
     }
+    if(this._config.verbose) {
+      console.log("Updated state:", this.state);
+    }
     return Promise.resolve();
   }
 
@@ -43,6 +49,9 @@ class MemoryHub extends AbstractHub {
   */
   log(appId, str) {
     this._lookupAndPush(appId, this.logs, str);
+    if(this._config.verbose) {
+      console.log("Logged:", appId, str);
+    }
     return Promise.resolve();
   }
 
@@ -51,6 +60,9 @@ class MemoryHub extends AbstractHub {
   */
   error(appId, string) {
     this._lookupAndPush(appId, this.logs, str);
+    if(this._config.verbose) {
+      console.log("Errored:", appId, str);
+    }
     return Promise.resolve();
   }
 
@@ -59,6 +71,9 @@ class MemoryHub extends AbstractHub {
   */
   heartbeat(appId) {
     this._lookupAndPush(appId, this.heartbeats, (new Date()).toString());
+    if(this._config.verbose) {
+      console.log("Heartbeat:", appId);
+    }
     return Promise.resolve();
   }
 
@@ -67,6 +82,9 @@ class MemoryHub extends AbstractHub {
   */
   ping(appId) {
     this._lookupAndPush(appId, this.pings, "ping");
+    if(this._config.verbose) {
+      console.log("Pinged:", appId);
+    }
     return Promise.resolve();
   }
 
@@ -75,6 +93,9 @@ class MemoryHub extends AbstractHub {
   */
   connect(appId) {
     this._lookupAndPush(appId, this.connections, "connect");
+    if(this._config.verbose) {
+      console.log("Connected:", appId);
+    }
     return Promise.resolve();
   }
 

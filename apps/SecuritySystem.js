@@ -61,7 +61,7 @@ let SecuritySystem = class SecuritySystem extends Base {
     }).on('end', function() {
       if (body) {
         var data = JSON.parse(body);
-
+        console.log("here");
         self.log(body);
         let stateUpdate = self._createManagedDeviceUpdateFromRequest(data);
 
